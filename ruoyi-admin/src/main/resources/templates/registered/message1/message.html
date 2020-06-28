@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('病人明细')"/>
+    <th:block th:include="include :: select2-css"/>
+    <th:block th:include="include :: bootstrap-select-css"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>病人姓名：</label>
+                            <input type="text" name="patientName"/>
+                        </li>
+                        <li>
+                            <label>性别：</label>
+                            <select name="patientSex" th:with="type=${@dict.getType('sys_user_sex')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}"></option>
+                            </select>
+                        </li>
+                        <li class="select-time">
+                            <label>出生日期：</label>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间"
+                                   name="params[beginPatientBirth]"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间"
+                                   name="params[endPatientBirth]"/>
+                        </li>
+                        <li>
+                            <label>门诊(住院号)：</label>
+                            <input type="text" name="hospitalId"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js"/>
+<th:block th:include="include :: bootstrap-select-js"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('registered:message:edit')}]];
+    var prefix = ctx + "registered/message1";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "病人",
+            columns: [{
+                checkbox: true
+            },
+
+                {
+                    field: 'patientName',
+                    title: '病人姓名'
+                },
+                {
+                    field: 'patientSex',
+                    title: '性别'
+                },
+                {
+                    field: 'patientAge',
+                    title: '年龄'
+                },
+                {
+                    field: 'patientCulture',
+                    title: '文化程度'
+                },
+                {
+                    field: 'patientProfessional',
+                    title: '职业'
+                },
+                {
+                    field: 'patientMarriage',
+                    title: '婚姻'
+                },
+                {
+                    field: 'patientBirth',
+                    title: '出生日期'
+                },
+                {
+                    field: 'patientHeight',
+                    title: '身高'
+                },
+                {
+                    field: 'patientWeight',
+                    title: '体重'
+                },
+                {
+                    field: 'hospitalId',
+                    title: '住院号'
+                },
+                {
+                    field: 'outpatientId',
+                    title: '门诊号'
+                },
+                {
+                    field: 'bedId',
+                    title: '床号'
+                },
+                {
+                    field: 'diagnosisCli',
+                    title: '临床诊断'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        //未就诊
+                        if (row.isInquiry == 0) {
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="confirm(\'' + row.id + '\')"><i class="fa fa-edit"></i>确认就诊</a> ');
+                        } else {
+                            //    已就诊
+                            if (row.isAddDetection!=""&&row.isAddDetection!=null) {
+                                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-edit"></i>检测报告</a> ');
+                            }
+                            var more = [];
+                            more.push("<a class='btn btn-default btn-xs ' href='javascript:void(0)' onclick='teamAppend(" + row.id + ")'><i class='fa fa-key'></i>添加团队</a> ");
+                            if (row.entrustId != null) {
+                                more.push("<a class='btn btn-default btn-xs ' href='javascript:void(0)' onclick='teamLook(" + row.id + ")'><i class='fa fa-key'></i>查看团队</a> ");
+                            }
+                            if (row.entrustId == null) {
+
+                                more.push("<a class='btn btn-default btn-xs ' href='javascript:void(0)' onclick='entrustAppend(" + row.id + ")'><i class='fa fa-check-square-o'></i>添加医嘱</a> ");
+                            } else {
+                                more.push("<a class='btn btn-default btn-xs ' href='javascript:void(0)' onclick='entrustAppend(" + row.id + ")'><i class='fa fa-check-square-o'></i>查看医嘱</a> ");
+
+                            }
+                            more.push("<a class='btn btn-default btn-xs ' href='javascript:void(0)' onclick='$.operate.edit(" + row.id + ")'><i class=''></i>填写临床诊断</a> ");
+                            more.push("<a class='btn btn-default btn-xs ' href='javascript:void(0)' onclick='diagnosisAdd(" + row.id + ")'><i class=''></i>添加诊断</a> ");
+                            actions.push('<a tabindex="0" class="btn btn-info btn-xs" role="button" data-container="body" data-placement="left" data-toggle="popover" data-html="true" data-trigger="hover" data-content="' + more.join('') + '"><i class="fa fa-chevron-circle-right"></i>更多操作</a>');
+                        }
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    /* 添加主治团队 */
+    function teamAppend(userId) {
+        var url = prefix + '/teamAppend/' + userId;
+        $.modal.open("添加团队", url, '800', '500');
+    }
+
+    /* 添加主治团队 */
+    function teamLook(userId) {
+        var url = prefix + '/teamLook/' + userId;
+        $.modal.open("查看团队", url, '800', '500');
+    }
+
+    var prefix2 = ctx + "registered/entrust";
+
+    /* 添加医嘱 */
+    function entrustAppend(userId) {
+        var url = prefix2 + '/entrustAppend/' + userId;
+        $.modal.open("医嘱添加", url, '1000', '800');
+    }
+
+    /* 添加诊断 */
+    function diagnosisAdd(userId) {
+        var url = prefix + '/diagnosisAdd/' + userId;
+        $.modal.open("添加诊断", url, '1000', '800');
+
+    }
+
+    //确认就诊
+    function confirm(userId) {
+        var url = prefix + '/confirm';
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: {
+                userId: userId,
+            },
+            success: function (result) {
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+</head>
+<body class="gray-bg">
+
+
+<div class="ui-layout-center">
+    <div class="container-div">
+        <div class="row">
+            <form id="user-form">
+                <input type="hidden" id="deptId" name="deptId">
+                <input type="hidden" id="parentId" name="parentId">
+            </form>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var user = [[${user}]];
+
+
+    var options = {
+        data: user,
+        sortName: "createTime",
+        sortOrder: "desc",
+        modalName: "用户",
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'userId',
+                title: '用户ID'
+            },
+            {
+                field: 'loginName',
+                title: '登录名称',
+                sortable: true
+            },
+            {
+                field: 'userName',
+                title: '用户名称'
+            },
+            {
+                field: 'dept.deptName',
+                title: '部门'
+            },
+            {
+                field: 'email',
+                title: '邮箱',
+                visible: false
+            },
+            {
+                field: 'phonenumber',
+                title: '手机'
+            },
+            {
+                field: 'createTime',
+                title: '创建时间',
+                sortable: true
+            },
+        ]
+    };
+    $.table.init(options);
+
+    var prefix = ctx + "registered/entrust";
+
+    function submitHandler() {
+        var userId = [[${userId}]];
+        console.log(userId);
+        table.set();
+        var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+        if (rows.length == 0) {
+            $.modal.alertWarning("请至少选择一位成员");
+            return;
+        }
+        $.modal.confirm("确认要添加选中的" + rows.length + "位成员吗?", function () {
+            /*
+            * 添加主治团队
+            * */
+            var ids = [];
+            ids = rows.join();
+            console.log(ids);
+            var url = prefix + '/teamAppendSave?ids=' + ids + "&userId=" + userId;
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (result) {
+                    $.modal.close();
+
+                }
+            });
+        });
+    }
+
+</script>
+</body>
+</html>

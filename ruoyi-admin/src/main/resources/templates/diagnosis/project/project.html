@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('诊断项目列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+     <!--       <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>诊断项目名称：</label>
+                                <input type="text" name="name"/>
+                            </li>
+                            <li>
+                                <label>父级id：</label>
+                                <input type="text" name="productId"/>
+                            </li>
+                            <li>
+                                <label>代号：</label>
+                                <input type="text" name="codeName"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>-->
+
+         <!--   <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="diagnosis:project:add">
+                    <i class="fa fa-plus"></i> 新增
+                </a>
+                <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="diagnosis:project:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+            </div>-->
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "diagnosis/project";
+        $(function() {
+            var options = {
+                showSearch:false,
+                showRefresh:false,
+                showColumns:false,
+                showToggle:false,
+                code: "id",
+                parentCode: "productId",
+                expandColumn: "1",
+                uniqueId: "id",
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "诊断项目",
+                columns: [{
+                    field: 'selectItem',
+                    checkbox: true,
+                    singleSelect:true
+                },
+                {
+                    field: 'name', 
+                    title: '诊断项目名称',
+                    align: 'left'
+                },
+
+                {
+                    field: 'codeName', 
+                    title: '代号',
+                    align: 'left'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    align: 'left',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.treeTable.init(options);
+        });
+
+        function submitHandler() {
+            // var row=$("#bootstrap-tree-table").bootstrapTable('getSelections');
+            var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                alert(rows);
+
+            $.modal.close();
+        }
+    </script>
+</body>
+</html>

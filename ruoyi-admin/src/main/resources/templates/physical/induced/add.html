@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增诱发电位报告')"/>
+    <th:block th:include="include :: jasny-bootstrap-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-induced-add">
+        <input name="patientId" class="form-control" type="text" style="display:none" value=" " id="patientId">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">mmn值
+                ：</label>
+            <div class="col-sm-8">
+                <input name="mvn" class="form-control" type="text">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n1lat
+                ：</label>
+            <div class="col-sm-8">
+                <input name="n1Lat" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n1amp
+                ：</label>
+            <div class="col-sm-8">
+                <input name="n1Amp" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p2lat
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p2Lat" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p2amp
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p2Amp" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n2lat
+                ：</label>
+            <div class="col-sm-8">
+                <input name="n2Lat" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n2Amp
+                ：</label>
+            <div class="col-sm-8">
+                <input name="n2Amp" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3alat
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p3aLat" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3aamp
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p3aAmp" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3blat
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p3bLat" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3bamp
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p3bAmp" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50las150
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p50LaS150" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50las250
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p50LaS250" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50ams150
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p50AmS150" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50ams250
+                ：</label>
+            <div class="col-sm-8">
+                <input name="p50AmS250" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlaa
+                ：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaA" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlab
+                ：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaB" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlas2
+                ：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaS2" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlac
+                ：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaC" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlas2c
+                ：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaS2C" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvamb
+                ：</label>
+            <div class="col-sm-8">
+                <input name="cnvAmB" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p300结论
+                ：</label>
+            <div class="col-sm-8">
+                <textarea name="impressionP300" class="form-control" required type="text">能完成任务，靶刺激反应时间正常。 P3b波幅未见异常。P3b潜伏期未见异常。	各波波幅潜伏期未见异常，在完成选择性注意事件过程中，未见认知过程异常征象</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50结论
+                ：</label>
+            <div class="col-sm-8">
+                <textarea name="impressionP50" class="form-control" type="text">S2-P50/S1-P50﹥0.5，提示大脑感觉门控（抗干扰能力）缺失，大脑不能排除干扰。</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnv结论
+                ：</label>
+            <div class="col-sm-8">
+                <textarea name="impressionCnv" class="form-control" type="text">能完成作业，提示唤醒水平降低所致注意障碍。</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">mmn结论
+                ：</label>
+            <div class="col-sm-8">
+                <textarea name="impressionMvn" class="form-control" type="text">MMN 波形潜伏期未见异常，提示在无意识状态下，大脑对新奇刺激信息自动加工功能正常</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片</label>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="img300" th:src="@{prictureP300}">
+                    <input id="prictureP300" name="prictureP300" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshot()">
+						          <span class="btn btn-white ">
+                                      <span>P30  </span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgCnv" th:src="@{pictureCnv}">
+                    <input id="pictureCnv" name="pictureCnv" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshottwo()">
+						          <span class="btn btn-white ">
+                                      <span>CVN</span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgP50" th:src="@{pictureP50}">
+                    <input id="pictureP50" name="pictureP50" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshotthree()">
+						          <span class="btn btn-white ">
+                                      <span>P50  </span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgMmn" th:src="@{pictureMmn}">
+                    <input id="pictureMmn" name="pictureMmn" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshotfour()">
+						          <span class="btn btn-white ">
+                                      <span>Mmn</span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    var prefix = ctx + "physical/induced"
+    $("#form-induced-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            var id = [[${userId}]];
+            document.getElementById('patientId').value = id;
+            $.operate.save(prefix + "/add", $('#form-induced-add').serialize());
+        }
+    }
+
+    function selectRadioUser() {
+        $.modal.open("选择病人", prefix + "/radio");
+    }
+
+    function screenshot() {
+        event.stopPropagation();
+        $.ajax({
+            type: "GET",
+            url: ctx + "common/uploadScreen",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    $("#img300").attr('src', result.fileName);
+                    $("#prictureP300").attr('value', result.fileName);
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+            },
+            error: function (error) {
+                $.modal.alertWarning("图片上传失败。");
+            }
+        });
+    }
+
+    function screenshottwo() {
+        event.stopPropagation();
+        $.ajax({
+            type: "GET",
+            url: ctx + "common/uploadScreen",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    $("#imgCnv").attr('src', result.fileName);
+                    $("#pictureCnv").attr('value', result.fileName);
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+            },
+            error: function (error) {
+                $.modal.alertWarning("图片上传失败。");
+            }
+        });
+    }
+
+    function screenshotthree() {
+        event.stopPropagation();
+        $.ajax({
+            type: "GET",
+            url: ctx + "common/uploadScreen",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    $("#imgP50").attr('src', result.fileName);
+                    $("#pictureP50").attr('value', result.fileName);
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+            },
+            error: function (error) {
+                $.modal.alertWarning("图片上传失败。");
+            }
+        });
+    }
+
+    function screenshotfour() {
+        event.stopPropagation();
+        $.ajax({
+            type: "GET",
+            url: ctx + "common/uploadScreen",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    $("#imgMmn").attr('src', result.fileName);
+                    $("#pictureMmn").attr('value', result.fileName);
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+            },
+            error: function (error) {
+                $.modal.alertWarning("图片上传失败。");
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

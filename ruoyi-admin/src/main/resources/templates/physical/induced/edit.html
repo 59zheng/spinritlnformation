@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改诱发电位报告(物理诊断下边)')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-induced-edit" th:object="${dbReportDiagnosisInduced}">
+        <input name="id" th:field="*{id}" type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">病人id：</label>
+            <div class="col-sm-8">
+                <input name="patientId" th:field="*{patientId}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p300结论：</label>
+            <div class="col-sm-8">
+                <input name="impressionP300" th:field="*{impressionP300}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50结论：</label>
+            <div class="col-sm-8">
+                <input name="impressionP50" th:field="*{impressionP50}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">mmn值：</label>
+            <div class="col-sm-8">
+                <input name="mvn" th:field="*{mvn}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnv结论：</label>
+            <div class="col-sm-8">
+                <input name="impressionCnv" th:field="*{impressionCnv}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">mmn结论：</label>
+            <div class="col-sm-8">
+                <input name="impressionMvn" th:field="*{impressionMvn}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p300图片：</label>
+            <div class="col-sm-8">
+                <input name="prictureP300" th:field="*{prictureP300}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnv图片：</label>
+            <div class="col-sm-8">
+                <input name="pictureCnv" th:field="*{pictureCnv}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50图片：</label>
+            <div class="col-sm-8">
+                <input name="pictureP50" th:field="*{pictureP50}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">mmn图片：</label>
+            <div class="col-sm-8">
+                <input name="pictureMmn" th:field="*{pictureMmn}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">技师签名：</label>
+            <div class="col-sm-8">
+                <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">医生签名：</label>
+            <div class="col-sm-8">
+                <input name="signatureDoctor" th:field="*{signatureDoctor}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n1lat：</label>
+            <div class="col-sm-8">
+                <input name="n1Lat" th:field="*{n1Lat}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n1amp：</label>
+            <div class="col-sm-8">
+                <input name="n1Amp" th:field="*{n1Amp}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p2lat：</label>
+            <div class="col-sm-8">
+                <input name="p2Lat" th:field="*{p2Lat}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p2amp：</label>
+            <div class="col-sm-8">
+                <input name="p2Amp" th:field="*{p2Amp}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n2lat：</label>
+            <div class="col-sm-8">
+                <input name="n2Lat" th:field="*{n2Lat}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">n2Amp：</label>
+            <div class="col-sm-8">
+                <input name="n2Amp" th:field="*{n2Amp}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3alat：</label>
+            <div class="col-sm-8">
+                <input name="p3aLat" th:field="*{p3aLat}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3aamp：</label>
+            <div class="col-sm-8">
+                <input name="p3aAmp" th:field="*{p3aAmp}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3blat：</label>
+            <div class="col-sm-8">
+                <input name="p3bLat" th:field="*{p3bLat}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p3bamp：</label>
+            <div class="col-sm-8">
+                <input name="p3bAmp" th:field="*{p3bAmp}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50las150：</label>
+            <div class="col-sm-8">
+                <input name="p50LaS150" th:field="*{p50LaS150}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50las250：</label>
+            <div class="col-sm-8">
+                <input name="p50LaS250" th:field="*{p50LaS250}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50ams150：</label>
+            <div class="col-sm-8">
+                <input name="p50AmS150" th:field="*{p50AmS150}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">p50ams250：</label>
+            <div class="col-sm-8">
+                <input name="p50AmS250" th:field="*{p50AmS250}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlaa：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaA" th:field="*{cnvLaA}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlab：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaB" th:field="*{cnvLaB}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlas2：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaS2" th:field="*{cnvLaS2}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlac：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaC" th:field="*{cnvLaC}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvlas2c：</label>
+            <div class="col-sm-8">
+                <input name="cnvLaS2C" th:field="*{cnvLaS2C}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">cnvamb：</label>
+            <div class="col-sm-8">
+                <input name="cnvAmB" th:field="*{cnvAmB}" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    var prefix = ctx + "physical/induced";
+    $("#form-induced-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-induced-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

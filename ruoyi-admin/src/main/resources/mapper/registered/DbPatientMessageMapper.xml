@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.registered.mapper.DbPatientMessageMapper">
+
+    <resultMap type="DbPatientMessage" id="DbPatientMessageResult">
+        <result property="id"    column="id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="patientSex"    column="patient_sex"    />
+        <result property="patientAge"    column="patient_age"    />
+        <result property="patientCulture"    column="patient_culture"    />
+        <result property="patientProfessional"    column="patient_professional"    />
+        <result property="patientMarriage"    column="patient_marriage"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="patientBirth"    column="patient_birth"    />
+        <result property="patientHeight"    column="patient_height"    />
+        <result property="patientWeight"    column="patient_weight"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="isHospital"    column="is_hospital"    />
+        <result property="outpatientId"    column="outpatient_id"    />
+        <result property="bedId"    column="bed_id"    />
+        <result property="diagnosisCli"    column="diagnosis_cli"    />
+        <result property="entrustId"    column="entrust_id"    />
+        <result property="teamAttending"    column="team_attending"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="patientIdNumber"    column="patient_id_number"    />
+        <result property="isInquiry"    column="is_inquiry"    />
+        <result property="isAddDetection"    column="is_add_detection"    />
+        <result property="dischargeTime"    column="discharge_time"    />
+        <result property="archivesId"    column="archives_id"    />
+    </resultMap>
+
+    <sql id="selectDbPatientMessageVo">
+        select id, patient_name, patient_sex, patient_age, patient_culture, patient_professional, patient_marriage, create_time, patient_birth, patient_height, patient_weight, hospital_id, is_hospital, outpatient_id, bed_id, diagnosis_cli, entrust_id, team_attending, patient_phone, patient_id_number, is_inquiry, is_add_detection, discharge_time, archives_id from db_patient_message
+    </sql>
+
+    <select id="selectDbPatientMessageList" parameterType="DbPatientMessage" resultMap="DbPatientMessageResult">
+        <include refid="selectDbPatientMessageVo"/>
+        <where>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="patientSex != null  and patientSex != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientAge != null  and patientAge != ''"> and patient_age = #{patientAge}</if>
+            <if test="patientCulture != null  and patientCulture != ''"> and patient_culture = #{patientCulture}</if>
+            <if test="patientProfessional != null  and patientProfessional != ''"> and patient_professional = #{patientProfessional}</if>
+            <if test="patientMarriage != null  and patientMarriage != ''"> and patient_marriage = #{patientMarriage}</if>
+            <if test="patientBirth != null "> and patient_birth = #{patientBirth}</if>
+            <if test="patientHeight != null "> and patient_height = #{patientHeight}</if>
+            <if test="patientWeight != null "> and patient_weight = #{patientWeight}</if>
+            <if test="hospitalId != null  and hospitalId != ''"> and hospital_id = #{hospitalId}</if>
+            <if test="isHospital != null  and isHospital != ''"> and is_hospital = #{isHospital}</if>
+            <if test="outpatientId != null  and outpatientId != ''"> and outpatient_id = #{outpatientId}</if>
+            <if test="bedId != null  and bedId != ''"> and bed_id = #{bedId}</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''"> and diagnosis_cli = #{diagnosisCli}</if>
+            <if test="entrustId != null "> and entrust_id = #{entrustId}</if>
+            <if test="teamAttending != null  and teamAttending != ''"> and team_attending = #{teamAttending}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="patientIdNumber != null  and patientIdNumber != ''"> and patient_id_number = #{patientIdNumber}</if>
+            <if test="isInquiry != null  and isInquiry != ''"> and is_inquiry = #{isInquiry}</if>
+            <if test="isAddDetection != null  and isAddDetection != ''"> and is_add_detection = #{isAddDetection}</if>
+            <if test="dischargeTime != null "> and discharge_time = #{dischargeTime}</if>
+            <if test="archivesId != null "> and archives_id = #{archivesId}</if>
+        </where>
+    </select>
+
+    <select id="selectDbPatientMessageById" parameterType="Long" resultMap="DbPatientMessageResult">
+        <include refid="selectDbPatientMessageVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDbPatientMessage" parameterType="DbPatientMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into db_patient_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="patientSex != null  and patientSex != ''">patient_sex,</if>
+            <if test="patientAge != null  and patientAge != ''">patient_age,</if>
+            <if test="patientCulture != null  and patientCulture != ''">patient_culture,</if>
+            <if test="patientProfessional != null  and patientProfessional != ''">patient_professional,</if>
+            <if test="patientMarriage != null  and patientMarriage != ''">patient_marriage,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="patientBirth != null ">patient_birth,</if>
+            <if test="patientHeight != null ">patient_height,</if>
+            <if test="patientWeight != null ">patient_weight,</if>
+            <if test="hospitalId != null  and hospitalId != ''">hospital_id,</if>
+            <if test="isHospital != null  and isHospital != ''">is_hospital,</if>
+            <if test="outpatientId != null  and outpatientId != ''">outpatient_id,</if>
+            <if test="bedId != null  and bedId != ''">bed_id,</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''">diagnosis_cli,</if>
+            <if test="entrustId != null ">entrust_id,</if>
+            <if test="teamAttending != null  and teamAttending != ''">team_attending,</if>
+            <if test="patientPhone != null  and patientPhone != ''">patient_phone,</if>
+            <if test="patientIdNumber != null  and patientIdNumber != ''">patient_id_number,</if>
+            <if test="isInquiry != null  and isInquiry != ''">is_inquiry,</if>
+            <if test="isAddDetection != null  and isAddDetection != ''">is_add_detection,</if>
+            <if test="dischargeTime != null ">discharge_time,</if>
+            <if test="archivesId != null ">archives_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="patientSex != null  and patientSex != ''">#{patientSex},</if>
+            <if test="patientAge != null  and patientAge != ''">#{patientAge},</if>
+            <if test="patientCulture != null  and patientCulture != ''">#{patientCulture},</if>
+            <if test="patientProfessional != null  and patientProfessional != ''">#{patientProfessional},</if>
+            <if test="patientMarriage != null  and patientMarriage != ''">#{patientMarriage},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="patientBirth != null ">#{patientBirth},</if>
+            <if test="patientHeight != null ">#{patientHeight},</if>
+            <if test="patientWeight != null ">#{patientWeight},</if>
+            <if test="hospitalId != null  and hospitalId != ''">#{hospitalId},</if>
+            <if test="isHospital != null  and isHospital != ''">#{isHospital},</if>
+            <if test="outpatientId != null  and outpatientId != ''">#{outpatientId},</if>
+            <if test="bedId != null  and bedId != ''">#{bedId},</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''">#{diagnosisCli},</if>
+            <if test="entrustId != null ">#{entrustId},</if>
+            <if test="teamAttending != null  and teamAttending != ''">#{teamAttending},</if>
+            <if test="patientPhone != null  and patientPhone != ''">#{patientPhone},</if>
+            <if test="patientIdNumber != null  and patientIdNumber != ''">#{patientIdNumber},</if>
+            <if test="isInquiry != null  and isInquiry != ''">#{isInquiry},</if>
+            <if test="isAddDetection != null  and isAddDetection != ''">#{isAddDetection},</if>
+            <if test="dischargeTime != null ">#{dischargeTime},</if>
+            <if test="archivesId != null ">#{archivesId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDbPatientMessage" parameterType="DbPatientMessage">
+        update db_patient_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="patientSex != null  and patientSex != ''">patient_sex = #{patientSex},</if>
+            <if test="patientAge != null  and patientAge != ''">patient_age = #{patientAge},</if>
+            <if test="patientCulture != null  and patientCulture != ''">patient_culture = #{patientCulture},</if>
+            <if test="patientProfessional != null  and patientProfessional != ''">patient_professional = #{patientProfessional},</if>
+            <if test="patientMarriage != null  and patientMarriage != ''">patient_marriage = #{patientMarriage},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="patientBirth != null ">patient_birth = #{patientBirth},</if>
+            <if test="patientHeight != null ">patient_height = #{patientHeight},</if>
+            <if test="patientWeight != null ">patient_weight = #{patientWeight},</if>
+            <if test="hospitalId != null  and hospitalId != ''">hospital_id = #{hospitalId},</if>
+            <if test="isHospital != null  and isHospital != ''">is_hospital = #{isHospital},</if>
+            <if test="outpatientId != null  and outpatientId != ''">outpatient_id = #{outpatientId},</if>
+            <if test="bedId != null  and bedId != ''">bed_id = #{bedId},</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''">diagnosis_cli = #{diagnosisCli},</if>
+            <if test="entrustId != null ">entrust_id = #{entrustId},</if>
+            <if test="teamAttending != null  and teamAttending != ''">team_attending = #{teamAttending},</if>
+            <if test="patientPhone != null  and patientPhone != ''">patient_phone = #{patientPhone},</if>
+            <if test="patientIdNumber != null  and patientIdNumber != ''">patient_id_number = #{patientIdNumber},</if>
+            <if test="isInquiry != null  and isInquiry != ''">is_inquiry = #{isInquiry},</if>
+            <if test="isAddDetection != null  and isAddDetection != ''">is_add_detection = #{isAddDetection},</if>
+            <if test="dischargeTime != null ">discharge_time = #{dischargeTime},</if>
+            <if test="archivesId != null ">archives_id = #{archivesId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbPatientMessageById" parameterType="Long">
+        delete from db_patient_message where id = #{id}
+    </delete>
+
+    <delete id="deleteDbPatientMessageByIds" parameterType="String">
+        delete from db_patient_message where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

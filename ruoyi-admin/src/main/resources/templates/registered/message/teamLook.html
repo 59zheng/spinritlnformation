@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+</head>
+<body class="gray-bg">
+
+
+<div class="ui-layout-center">
+    <div class="container-div">
+        <div class="row">
+            <form id="user-form">
+            </form>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var user = [[${user}]];
+
+
+    var options = {
+        data: user,
+        showSearch:false,
+        showRefresh:false,
+        showColumns:false,
+        showToggle:false,
+        sortName: "createTime",
+        sortOrder: "desc",
+        modalName: "用户",
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'userId',
+                title: '用户ID'
+            },
+            {
+                field: 'loginName',
+                title: '登录名称',
+                sortable: true
+            },
+            {
+                field: 'userName',
+                title: '用户名称'
+            },
+            {
+                field: 'dept.deptName',
+                title: '部门'
+            },
+            {
+                field: 'email',
+                title: '邮箱',
+                visible: false
+            },
+            {
+                field: 'phonenumber',
+                title: '手机'
+            },
+            {
+                field: 'createTime',
+                title: '创建时间',
+                sortable: true
+            },
+        ]
+    };
+    $.table.init(options);
+
+    var prefix = ctx + "registered/message";
+
+    function submitHandler() {
+                    $.modal.close();
+    }
+
+</script>
+</body>
+</html>

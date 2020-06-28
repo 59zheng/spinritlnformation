@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.physical.mapper.DbReportDiagnosisInducedMapper">
+
+    <resultMap type="DbReportDiagnosisInduced" id="DbReportDiagnosisInducedResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="impressionP300"    column="impression_p300"    />
+        <result property="impressionP50"    column="impression_p50"    />
+        <result property="mvn"    column="mvn"    />
+        <result property="impressionCnv"    column="impression_cnv"    />
+        <result property="impressionMvn"    column="impression_mvn"    />
+        <result property="prictureP300"    column="pricture_p300"    />
+        <result property="pictureCnv"    column="picture_cnv"    />
+        <result property="pictureP50"    column="picture_p50"    />
+        <result property="pictureMmn"    column="picture_mmn"    />
+        <result property="signatureTechnician"    column="signature_technician"    />
+        <result property="signatureDoctor"    column="signature_doctor"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="n1Lat"    column="n1_lat"    />
+        <result property="n1Amp"    column="n1_amp"    />
+        <result property="p2Lat"    column="p2_lat"    />
+        <result property="p2Amp"    column="p2_amp"    />
+        <result property="n2Lat"    column="n2_lat"    />
+        <result property="n2Amp"    column="n2_amp"    />
+        <result property="p3aLat"    column="p3a_lat"    />
+        <result property="p3aAmp"    column="p3a_amp"    />
+        <result property="p3bLat"    column="p3b_lat"    />
+        <result property="p3bAmp"    column="p3b_amp"    />
+        <result property="p50LaS150"    column="p50_la_s1_50"    />
+        <result property="p50LaS250"    column="p50_la_s2_50"    />
+        <result property="p50AmS150"    column="p50_am_s1_50"    />
+        <result property="p50AmS250"    column="p50_am_s2_50"    />
+        <result property="cnvLaA"    column="cnv_la_a"    />
+        <result property="cnvLaB"    column="cnv_la_b"    />
+        <result property="cnvLaS2"    column="cnv_la_s2"    />
+        <result property="cnvLaC"    column="cnv_la_c"    />
+        <result property="cnvLaS2C"    column="cnv_la_s2_c"    />
+        <result property="cnvAmB"    column="cnv_am_b"    />
+    </resultMap>
+
+    <sql id="selectDbReportDiagnosisInducedVo">
+        select id, patient_id, impression_p300, impression_p50, mvn, impression_cnv, impression_mvn, pricture_p300, picture_cnv, picture_p50, picture_mmn, signature_technician, signature_doctor, create_time, n1_lat, n1_amp, p2_lat, p2_amp, n2_lat, n2_amp, p3a_lat, p3a_amp, p3b_lat, p3b_amp, p50_la_s1_50, p50_la_s2_50, p50_am_s1_50, p50_am_s2_50, cnv_la_a, cnv_la_b, cnv_la_s2, cnv_la_c, cnv_la_s2_c, cnv_am_b from db_report_diagnosis_induced
+    </sql>
+
+    <select id="selectDbReportDiagnosisInducedList" parameterType="DbReportDiagnosisInduced" resultMap="DbReportDiagnosisInducedResult">
+        <include refid="selectDbReportDiagnosisInducedVo"/>
+        <where>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="impressionP300 != null  and impressionP300 != ''"> and impression_p300 = #{impressionP300}</if>
+            <if test="impressionP50 != null  and impressionP50 != ''"> and impression_p50 = #{impressionP50}</if>
+            <if test="mvn != null  and mvn != ''"> and mvn = #{mvn}</if>
+            <if test="impressionCnv != null  and impressionCnv != ''"> and impression_cnv = #{impressionCnv}</if>
+            <if test="impressionMvn != null  and impressionMvn != ''"> and impression_mvn = #{impressionMvn}</if>
+            <if test="prictureP300 != null  and prictureP300 != ''"> and pricture_p300 = #{prictureP300}</if>
+            <if test="pictureCnv != null  and pictureCnv != ''"> and picture_cnv = #{pictureCnv}</if>
+            <if test="pictureP50 != null  and pictureP50 != ''"> and picture_p50 = #{pictureP50}</if>
+            <if test="pictureMmn != null  and pictureMmn != ''"> and picture_mmn = #{pictureMmn}</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''"> and signature_technician = #{signatureTechnician}</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''"> and signature_doctor = #{signatureDoctor}</if>
+            <if test="n1Lat != null  and n1Lat != ''"> and n1_lat = #{n1Lat}</if>
+            <if test="n1Amp != null  and n1Amp != ''"> and n1_amp = #{n1Amp}</if>
+            <if test="p2Lat != null  and p2Lat != ''"> and p2_lat = #{p2Lat}</if>
+            <if test="p2Amp != null  and p2Amp != ''"> and p2_amp = #{p2Amp}</if>
+            <if test="n2Lat != null  and n2Lat != ''"> and n2_lat = #{n2Lat}</if>
+            <if test="n2Amp != null  and n2Amp != ''"> and n2_amp = #{n2Amp}</if>
+            <if test="p3aLat != null  and p3aLat != ''"> and p3a_lat = #{p3aLat}</if>
+            <if test="p3aAmp != null  and p3aAmp != ''"> and p3a_amp = #{p3aAmp}</if>
+            <if test="p3bLat != null  and p3bLat != ''"> and p3b_lat = #{p3bLat}</if>
+            <if test="p3bAmp != null  and p3bAmp != ''"> and p3b_amp = #{p3bAmp}</if>
+            <if test="p50LaS150 != null  and p50LaS150 != ''"> and p50_la_s1_50 = #{p50LaS150}</if>
+            <if test="p50LaS250 != null  and p50LaS250 != ''"> and p50_la_s2_50 = #{p50LaS250}</if>
+            <if test="p50AmS150 != null  and p50AmS150 != ''"> and p50_am_s1_50 = #{p50AmS150}</if>
+            <if test="p50AmS250 != null  and p50AmS250 != ''"> and p50_am_s2_50 = #{p50AmS250}</if>
+            <if test="cnvLaA != null  and cnvLaA != ''"> and cnv_la_a = #{cnvLaA}</if>
+            <if test="cnvLaB != null  and cnvLaB != ''"> and cnv_la_b = #{cnvLaB}</if>
+            <if test="cnvLaS2 != null  and cnvLaS2 != ''"> and cnv_la_s2 = #{cnvLaS2}</if>
+            <if test="cnvLaC != null  and cnvLaC != ''"> and cnv_la_c = #{cnvLaC}</if>
+            <if test="cnvLaS2C != null  and cnvLaS2C != ''"> and cnv_la_s2_c = #{cnvLaS2C}</if>
+            <if test="cnvAmB != null  and cnvAmB != ''"> and cnv_am_b = #{cnvAmB}</if>
+        </where>
+    </select>
+
+    <select id="selectDbReportDiagnosisInducedById" parameterType="Long" resultMap="DbReportDiagnosisInducedResult">
+        <include refid="selectDbReportDiagnosisInducedVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDbReportDiagnosisInduced" parameterType="DbReportDiagnosisInduced" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into db_report_diagnosis_induced
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="impressionP300 != null  and impressionP300 != ''">impression_p300,</if>
+            <if test="impressionP50 != null  and impressionP50 != ''">impression_p50,</if>
+            <if test="mvn != null  and mvn != ''">mvn,</if>
+            <if test="impressionCnv != null  and impressionCnv != ''">impression_cnv,</if>
+            <if test="impressionMvn != null  and impressionMvn != ''">impression_mvn,</if>
+            <if test="prictureP300 != null  and prictureP300 != ''">pricture_p300,</if>
+            <if test="pictureCnv != null  and pictureCnv != ''">picture_cnv,</if>
+            <if test="pictureP50 != null  and pictureP50 != ''">picture_p50,</if>
+            <if test="pictureMmn != null  and pictureMmn != ''">picture_mmn,</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician,</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''">signature_doctor,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="n1Lat != null  and n1Lat != ''">n1_lat,</if>
+            <if test="n1Amp != null  and n1Amp != ''">n1_amp,</if>
+            <if test="p2Lat != null  and p2Lat != ''">p2_lat,</if>
+            <if test="p2Amp != null  and p2Amp != ''">p2_amp,</if>
+            <if test="n2Lat != null  and n2Lat != ''">n2_lat,</if>
+            <if test="n2Amp != null  and n2Amp != ''">n2_amp,</if>
+            <if test="p3aLat != null  and p3aLat != ''">p3a_lat,</if>
+            <if test="p3aAmp != null  and p3aAmp != ''">p3a_amp,</if>
+            <if test="p3bLat != null  and p3bLat != ''">p3b_lat,</if>
+            <if test="p3bAmp != null  and p3bAmp != ''">p3b_amp,</if>
+            <if test="p50LaS150 != null  and p50LaS150 != ''">p50_la_s1_50,</if>
+            <if test="p50LaS250 != null  and p50LaS250 != ''">p50_la_s2_50,</if>
+            <if test="p50AmS150 != null  and p50AmS150 != ''">p50_am_s1_50,</if>
+            <if test="p50AmS250 != null  and p50AmS250 != ''">p50_am_s2_50,</if>
+            <if test="cnvLaA != null  and cnvLaA != ''">cnv_la_a,</if>
+            <if test="cnvLaB != null  and cnvLaB != ''">cnv_la_b,</if>
+            <if test="cnvLaS2 != null  and cnvLaS2 != ''">cnv_la_s2,</if>
+            <if test="cnvLaC != null  and cnvLaC != ''">cnv_la_c,</if>
+            <if test="cnvLaS2C != null  and cnvLaS2C != ''">cnv_la_s2_c,</if>
+            <if test="cnvAmB != null  and cnvAmB != ''">cnv_am_b,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="impressionP300 != null  and impressionP300 != ''">#{impressionP300},</if>
+            <if test="impressionP50 != null  and impressionP50 != ''">#{impressionP50},</if>
+            <if test="mvn != null  and mvn != ''">#{mvn},</if>
+            <if test="impressionCnv != null  and impressionCnv != ''">#{impressionCnv},</if>
+            <if test="impressionMvn != null  and impressionMvn != ''">#{impressionMvn},</if>
+            <if test="prictureP300 != null  and prictureP300 != ''">#{prictureP300},</if>
+            <if test="pictureCnv != null  and pictureCnv != ''">#{pictureCnv},</if>
+            <if test="pictureP50 != null  and pictureP50 != ''">#{pictureP50},</if>
+            <if test="pictureMmn != null  and pictureMmn != ''">#{pictureMmn},</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''">#{signatureTechnician},</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''">#{signatureDoctor},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="n1Lat != null  and n1Lat != ''">#{n1Lat},</if>
+            <if test="n1Amp != null  and n1Amp != ''">#{n1Amp},</if>
+            <if test="p2Lat != null  and p2Lat != ''">#{p2Lat},</if>
+            <if test="p2Amp != null  and p2Amp != ''">#{p2Amp},</if>
+            <if test="n2Lat != null  and n2Lat != ''">#{n2Lat},</if>
+            <if test="n2Amp != null  and n2Amp != ''">#{n2Amp},</if>
+            <if test="p3aLat != null  and p3aLat != ''">#{p3aLat},</if>
+            <if test="p3aAmp != null  and p3aAmp != ''">#{p3aAmp},</if>
+            <if test="p3bLat != null  and p3bLat != ''">#{p3bLat},</if>
+            <if test="p3bAmp != null  and p3bAmp != ''">#{p3bAmp},</if>
+            <if test="p50LaS150 != null  and p50LaS150 != ''">#{p50LaS150},</if>
+            <if test="p50LaS250 != null  and p50LaS250 != ''">#{p50LaS250},</if>
+            <if test="p50AmS150 != null  and p50AmS150 != ''">#{p50AmS150},</if>
+            <if test="p50AmS250 != null  and p50AmS250 != ''">#{p50AmS250},</if>
+            <if test="cnvLaA != null  and cnvLaA != ''">#{cnvLaA},</if>
+            <if test="cnvLaB != null  and cnvLaB != ''">#{cnvLaB},</if>
+            <if test="cnvLaS2 != null  and cnvLaS2 != ''">#{cnvLaS2},</if>
+            <if test="cnvLaC != null  and cnvLaC != ''">#{cnvLaC},</if>
+            <if test="cnvLaS2C != null  and cnvLaS2C != ''">#{cnvLaS2C},</if>
+            <if test="cnvAmB != null  and cnvAmB != ''">#{cnvAmB},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDbReportDiagnosisInduced" parameterType="DbReportDiagnosisInduced">
+        update db_report_diagnosis_induced
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="impressionP300 != null  and impressionP300 != ''">impression_p300 = #{impressionP300},</if>
+            <if test="impressionP50 != null  and impressionP50 != ''">impression_p50 = #{impressionP50},</if>
+            <if test="mvn != null  and mvn != ''">mvn = #{mvn},</if>
+            <if test="impressionCnv != null  and impressionCnv != ''">impression_cnv = #{impressionCnv},</if>
+            <if test="impressionMvn != null  and impressionMvn != ''">impression_mvn = #{impressionMvn},</if>
+            <if test="prictureP300 != null  and prictureP300 != ''">pricture_p300 = #{prictureP300},</if>
+            <if test="pictureCnv != null  and pictureCnv != ''">picture_cnv = #{pictureCnv},</if>
+            <if test="pictureP50 != null  and pictureP50 != ''">picture_p50 = #{pictureP50},</if>
+            <if test="pictureMmn != null  and pictureMmn != ''">picture_mmn = #{pictureMmn},</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician = #{signatureTechnician},</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''">signature_doctor = #{signatureDoctor},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="n1Lat != null  and n1Lat != ''">n1_lat = #{n1Lat},</if>
+            <if test="n1Amp != null  and n1Amp != ''">n1_amp = #{n1Amp},</if>
+            <if test="p2Lat != null  and p2Lat != ''">p2_lat = #{p2Lat},</if>
+            <if test="p2Amp != null  and p2Amp != ''">p2_amp = #{p2Amp},</if>
+            <if test="n2Lat != null  and n2Lat != ''">n2_lat = #{n2Lat},</if>
+            <if test="n2Amp != null  and n2Amp != ''">n2_amp = #{n2Amp},</if>
+            <if test="p3aLat != null  and p3aLat != ''">p3a_lat = #{p3aLat},</if>
+            <if test="p3aAmp != null  and p3aAmp != ''">p3a_amp = #{p3aAmp},</if>
+            <if test="p3bLat != null  and p3bLat != ''">p3b_lat = #{p3bLat},</if>
+            <if test="p3bAmp != null  and p3bAmp != ''">p3b_amp = #{p3bAmp},</if>
+            <if test="p50LaS150 != null  and p50LaS150 != ''">p50_la_s1_50 = #{p50LaS150},</if>
+            <if test="p50LaS250 != null  and p50LaS250 != ''">p50_la_s2_50 = #{p50LaS250},</if>
+            <if test="p50AmS150 != null  and p50AmS150 != ''">p50_am_s1_50 = #{p50AmS150},</if>
+            <if test="p50AmS250 != null  and p50AmS250 != ''">p50_am_s2_50 = #{p50AmS250},</if>
+            <if test="cnvLaA != null  and cnvLaA != ''">cnv_la_a = #{cnvLaA},</if>
+            <if test="cnvLaB != null  and cnvLaB != ''">cnv_la_b = #{cnvLaB},</if>
+            <if test="cnvLaS2 != null  and cnvLaS2 != ''">cnv_la_s2 = #{cnvLaS2},</if>
+            <if test="cnvLaC != null  and cnvLaC != ''">cnv_la_c = #{cnvLaC},</if>
+            <if test="cnvLaS2C != null  and cnvLaS2C != ''">cnv_la_s2_c = #{cnvLaS2C},</if>
+            <if test="cnvAmB != null  and cnvAmB != ''">cnv_am_b = #{cnvAmB},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbReportDiagnosisInducedById" parameterType="Long">
+        delete from db_report_diagnosis_induced where id = #{id}
+    </delete>
+
+    <delete id="deleteDbReportDiagnosisInducedByIds" parameterType="String">
+        delete from db_report_diagnosis_induced where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

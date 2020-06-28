@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('诱发电位')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                      <!--  <li>
+                            <label>病人id：</label>
+                            <input type="text" name="patientId"/>
+                        </li>
+                        <li>
+                            <label>p300(Json)字串：</label>
+                            <input type="text" name="p300"/>
+                        </li>
+                        <li>
+                            <label>p50(json)字串：</label>
+                            <input type="text" name="p50"/>
+                        </li>
+                        <li>
+                            <label>cnv(json)字串：</label>
+                            <input type="text" name="cnv"/>
+                        </li>-->
+                        <li>
+                            <label>p300结论：</label>
+                            <input type="text" name="impressionP300"/>
+                        </li>
+                        <li>
+                            <label>p50结论：</label>
+                            <input type="text" name="impressionP50"/>
+                        </li>
+                        <li>
+                            <label>cnv结论：</label>
+                            <input type="text" name="impressionCnv"/>
+                        </li>
+                        <li>
+                            <label>mvn结论：</label>
+                            <input type="text" name="impressionMvn"/>
+                        </li>
+                      <!--  <li>
+                            <label>mvn值：</label>
+                            <input type="text" name="mvn"/>
+                        </li>
+                        <li>
+                            <label>p300图片：</label>
+                            <input type="text" name="prictureP300"/>
+                        </li>
+                        <li>
+                            <label>cnv图片：</label>
+                            <input type="text" name="pictureCnv"/>
+                        </li>
+                        <li>
+                            <label>p50图片：</label>
+                            <input type="text" name="pictureP50"/>
+                        </li>
+                        <li>
+                            <label>mmn图片：</label>
+                            <input type="text" name="pictureMmn"/>
+                        </li>-->
+                        <li>
+                            <label>技师签名：</label>
+                            <input type="text" name="signatureTechnician"/>
+                        </li>
+                        <li>
+                            <label>医生签名：</label>
+                            <input type="text" name="signatureDoctor"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('physical:induced:edit')}]];
+    var addFlag = [[${@permission.hasPermi('physical:induced:add')}]];
+    var removeFlag = [[${@permission.hasPermi('physical:induced:remove')}]];
+    var prefix = ctx + "physical/induced1";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "诱发电位",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'associatedId',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'dbPatientMessage.patientName',
+                    title: '病人姓名'
+                },
+                {
+                    field: 'dbPatientMessage.patientSex',
+                    title: '性别'
+                },
+                {
+                    field: 'dbPatientMessage.patientAge',
+                    title: '年龄'
+                },
+
+                {
+                    field: 'dbPatientMessage.hospitalId',
+                    title: '住院号'
+                },
+                {
+                    field: 'dbPatientMessage.outpatientId',
+                    title: '门诊号'
+                },
+                {
+                    field: 'dbPatientMessage.bedId',
+                    title: '床号'
+                },
+                {
+                    field: 'dbPatientMessage.diagnosisCli',
+                    title: '临床诊断'
+                },
+                {
+                    field: 'createTime',
+                    title: '诊断时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.associatedId + '\')"><i class="fa fa-edit"></i>修改</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' +'" href="javascript:void(0)" onclick="openn(\'' + row.associatedId + '\')"><i class="fa fa-remove"></i>导出</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function  openn(id) {
+        var url = prefix + '/generateWord/' + id;
+        window.location.href=url;
+    }
+</script>
+</body>
+</html>

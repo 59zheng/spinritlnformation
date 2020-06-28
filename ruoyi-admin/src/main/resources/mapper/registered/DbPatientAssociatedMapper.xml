@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.registered.mapper.DbPatientAssociatedMapper">
+    
+    <resultMap type="DbPatientAssociated" id="DbPatientAssociatedResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="associatedId"    column="associated_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="associatedTable"    column="associated_table"    />
+        <result property="isOk"    column="is_ok"    />
+    </resultMap>
+
+    <sql id="selectDbPatientAssociatedVo">
+        select id, patient_id, associated_id, create_time, associated_table, is_ok from db_patient_associated
+    </sql>
+
+    <select id="selectDbPatientAssociatedList" parameterType="DbPatientAssociated" resultMap="DbPatientAssociatedResult">
+        <include refid="selectDbPatientAssociatedVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="associatedId != null "> and associated_id = #{associatedId}</if>
+            <if test="associatedTable != null  and associatedTable != ''"> and associated_table = #{associatedTable}</if>
+            <if test="isOk != null  and isOk != ''"> and is_ok = #{isOk}</if>
+        </where>
+    </select>
+    
+    <select id="selectDbPatientAssociatedById" parameterType="Long" resultMap="DbPatientAssociatedResult">
+        <include refid="selectDbPatientAssociatedVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDbPatientAssociated" parameterType="DbPatientAssociated" useGeneratedKeys="true" keyProperty="id">
+        insert into db_patient_associated
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="associatedId != null ">associated_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="associatedTable != null  and associatedTable != ''">associated_table,</if>
+            <if test="isOk != null  and isOk != ''">is_ok,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="associatedId != null ">#{associatedId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="associatedTable != null  and associatedTable != ''">#{associatedTable},</if>
+            <if test="isOk != null  and isOk != ''">#{isOk},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbPatientAssociated" parameterType="DbPatientAssociated">
+        update db_patient_associated
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="associatedId != null ">associated_id = #{associatedId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="associatedTable != null  and associatedTable != ''">associated_table = #{associatedTable},</if>
+            <if test="isOk != null  and isOk != ''">is_ok = #{isOk},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbPatientAssociatedById" parameterType="Long">
+        delete from db_patient_associated where id = #{id}
+    </delete>
+
+    <delete id="deleteDbPatientAssociatedByIds" parameterType="String">
+        delete from db_patient_associated where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

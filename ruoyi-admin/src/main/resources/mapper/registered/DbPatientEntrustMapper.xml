@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.registered.mapper.DbPatientEntrustMapper">
+
+    <resultMap type="DbPatientEntrust" id="DbPatientEntrustResult">
+        <result property="id" column="id"/>
+        <result property="patientId" column="patient_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="entrustContent" column="entrust_content"/>
+        <result property="sendId" column="send_id"/>
+    </resultMap>
+
+    <sql id="selectDbPatientEntrustVo">
+        select id, patient_id, user_id, entrust_content, send_id from db_patient_entrust
+    </sql>
+
+    <select id="selectDbPatientEntrustList" parameterType="DbPatientEntrust" resultMap="DbPatientEntrustResult">
+        <include refid="selectDbPatientEntrustVo"/>
+        <where>
+            <if test="patientId != null ">and patient_id = #{patientId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="entrustContent != null  and entrustContent != ''">and entrust_content = #{entrustContent}</if>
+            <if test="sendId != null  and sendId != ''">and send_id = #{sendId}</if>
+        </where>
+    </select>
+
+    <select id="selectDbPatientEntrustById" parameterType="Long" resultMap="DbPatientEntrustResult">
+        <include refid="selectDbPatientEntrustVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDbPatientEntrust" parameterType="DbPatientEntrust" useGeneratedKeys="true" keyProperty="id">
+        insert into db_patient_entrust
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="entrustContent != null  and entrustContent != ''">entrust_content,</if>
+            <if test="sendId != null  and sendId != ''">send_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="entrustContent != null  and entrustContent != ''">#{entrustContent},</if>
+            <if test="sendId != null  and sendId != ''">#{sendId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDbPatientEntrust" parameterType="DbPatientEntrust">
+        update db_patient_entrust
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="entrustContent != null  and entrustContent != ''">entrust_content = #{entrustContent},</if>
+            <if test="sendId != null  and sendId != ''">send_id = #{sendId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbPatientEntrustById" parameterType="Long">
+        delete from db_patient_entrust where id = #{id}
+    </delete>
+
+    <delete id="deleteDbPatientEntrustByIds" parameterType="String">
+        delete from db_patient_entrust where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

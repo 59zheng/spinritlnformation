@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改病人诊断记录关联检测报告')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-associated-edit" th:object="${dbPatientAssociated}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">病人_id：</label>
+                <div class="col-sm-8">
+                    <input name="patientId" th:field="*{patientId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">关联相关报告id：</label>
+                <div class="col-sm-8">
+                    <input name="associatedId" th:field="*{associatedId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">关联表名称：</label>
+                <div class="col-sm-8">
+                    <input name="associatedTable" th:field="*{associatedTable}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否完成：</label>
+                <div class="col-sm-8">
+                    <input name="isOk" th:field="*{isOk}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "registered/associated";
+        $("#form-associated-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-associated-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>
