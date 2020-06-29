@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改红外热成像及血流图检查')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-infrared-edit" th:object="${dbReportDiagnosisInfrared}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">病人id：</label>
+                <div class="col-sm-8">
+                    <input name="patientId" th:field="*{patientId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">Integral值：</label>
+                <div class="col-sm-8">
+                    <input name="integral" th:field="*{integral}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">Centroid值：</label>
+                <div class="col-sm-8">
+                    <input name="centroid" th:field="*{centroid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">Slope值：</label>
+                <div class="col-sm-8">
+                    <input name="slope" th:field="*{slope}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">波普描述：</label>
+                <div class="col-sm-8">
+                    <input name="describe" th:field="*{describe}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">诊断提示：</label>
+                <div class="col-sm-8">
+                    <input name="hint" th:field="*{hint}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">技师签名：</label>
+                <div class="col-sm-8">
+                    <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">图片地址：</label>
+                <div class="col-sm-8">
+                    <input name="pictureCnv" th:field="*{pictureCnv}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "physical/infrared";
+        $("#form-infrared-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-infrared-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

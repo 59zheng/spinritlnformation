@@ -18,6 +18,8 @@ import com.ruoyi.mind.utils.TableListUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +28,9 @@ import javax.naming.Name;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class DbReportDiagnosisInducedEndController extends BaseController {
 
 
     @GetMapping("/generateWord/{id}")
-    public void generateWord(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException {
+    public void generateWord(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException, URISyntaxException {
 
         DbReportDiagnosisInduced dbReportDiagnosisInduced = dbReportDiagnosisInducedService.selectDbReportDiagnosisInducedById(id);
         Long patientId = dbReportDiagnosisInduced.getPatientId();
@@ -158,8 +159,13 @@ public class DbReportDiagnosisInducedEndController extends BaseController {
          * */
 
 
-//        String wordPath = "/doc/induced.docx";
-        String modelName = "D:\\it2\\SpiritInformation\\RuoYi-master\\ruoyi-admin\\src\\main\\resources\\doc\\induced.docx";
+        URL resource = DbReportDiagnosisInducedEndController.class.getResource("/doc/induced.docx");
+        Resource resource2 = new ClassPathResource("/doc/induced.docx");
+        String absolutePath = resource2.getFile().getAbsolutePath();
+
+      /*  String property = System.getProperty("induced.docx");
+        String downloadPath = new File(resource.toURI()).getAbsolutePath();*/
+        String modelName =absolutePath;
 
         /*
         *
