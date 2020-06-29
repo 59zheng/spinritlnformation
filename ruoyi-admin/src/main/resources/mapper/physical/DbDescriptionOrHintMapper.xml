@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.physical.mapper.DbDescriptionOrHintMapper">
+    
+    <resultMap type="DbDescriptionOrHint" id="DbDescriptionOrHintResult">
+        <result property="id"    column="id"    />
+        <result property="typeCode"    column="type_code"    />
+        <result property="name"    column="name"    />
+        <result property="describe"    column="describe"    />
+        <result property="hint"    column="hint"    />
+    </resultMap>
+
+    <sql id="selectDbDescriptionOrHintVo">
+        select id, type_code, name, describe, hint from db_description_or_hint
+    </sql>
+
+    <select id="selectDbDescriptionOrHintList" parameterType="DbDescriptionOrHint" resultMap="DbDescriptionOrHintResult">
+        <include refid="selectDbDescriptionOrHintVo"/>
+        <where>  
+            <if test="typeCode != null  and typeCode != ''"> and type_code = #{typeCode}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
+            <if test="hint != null  and hint != ''"> and hint = #{hint}</if>
+        </where>
+    </select>
+    
+    <select id="selectDbDescriptionOrHintById" parameterType="Long" resultMap="DbDescriptionOrHintResult">
+        <include refid="selectDbDescriptionOrHintVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDbDescriptionOrHint" parameterType="DbDescriptionOrHint">
+        insert into db_description_or_hint
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="typeCode != null  and typeCode != ''">type_code,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="describe != null  and describe != ''">describe,</if>
+            <if test="hint != null  and hint != ''">hint,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="typeCode != null  and typeCode != ''">#{typeCode},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="describe != null  and describe != ''">#{describe},</if>
+            <if test="hint != null  and hint != ''">#{hint},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbDescriptionOrHint" parameterType="DbDescriptionOrHint">
+        update db_description_or_hint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeCode != null  and typeCode != ''">type_code = #{typeCode},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="describe != null  and describe != ''">describe = #{describe},</if>
+            <if test="hint != null  and hint != ''">hint = #{hint},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbDescriptionOrHintById" parameterType="Long">
+        delete from db_description_or_hint where id = #{id}
+    </delete>
+
+    <delete id="deleteDbDescriptionOrHintByIds" parameterType="String">
+        delete from db_description_or_hint where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
