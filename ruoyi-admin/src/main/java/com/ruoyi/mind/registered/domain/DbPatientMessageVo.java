@@ -5,7 +5,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class DbPatientMessageVo extends BaseEntity {
 
 
-    private  DbPatientMessage dbPatientMessage;
+    private DbPatientMessage dbPatientMessage;
 
     public DbPatientMessageVo() {
     }
@@ -41,8 +41,6 @@ public class DbPatientMessageVo extends BaseEntity {
     }
 
     /**
-
-
      * 关联相关报告id
      */
     private Long associatedId;

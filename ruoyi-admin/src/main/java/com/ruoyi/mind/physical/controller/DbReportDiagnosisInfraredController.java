@@ -1,6 +1,11 @@
 package com.ruoyi.mind.physical.controller;
 
 import java.util.List;
+
+import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.mind.registered.domain.DbPatientMessage;
+import com.ruoyi.mind.utils.TableListUtils;
+import com.ruoyi.system.domain.SysUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,9 +54,13 @@ public class DbReportDiagnosisInfraredController extends BaseController
     @ResponseBody
     public TableDataInfo list(DbReportDiagnosisInfrared dbReportDiagnosisInfrared)
     {
+        /*
+         *
+         * 病人信息  <泛型>
+         * */
         startPage();
-        List<DbReportDiagnosisInfrared> list = dbReportDiagnosisInfraredService.selectDbReportDiagnosisInfraredList(dbReportDiagnosisInfrared);
-        return getDataTable(list);
+        List<DbPatientMessage> induced = TableListUtils.getList("infrared");
+        return getDataTable(induced);
     }
 
     /**
@@ -78,6 +87,17 @@ public class DbReportDiagnosisInfraredController extends BaseController
     }
 
     /**
+     * 新增脑电报告(物理诊断下边)
+     */
+    @GetMapping("/addonly/{userId}")
+    public String addonly( ModelMap map,@PathVariable("userId") Long userId) {
+
+        map.put("userId",userId);
+        return prefix + "/add";
+    }
+
+
+    /**
      * 新增保存红外热成像及血流图检查
      */
     @RequiresPermissions("physical:infrared:add")
@@ -86,7 +106,18 @@ public class DbReportDiagnosisInfraredController extends BaseController
     @ResponseBody
     public AjaxResult addSave(DbReportDiagnosisInfrared dbReportDiagnosisInfrared)
     {
-        return toAjax(dbReportDiagnosisInfraredService.insertDbReportDiagnosisInfrared(dbReportDiagnosisInfrared));
+        /*
+         * 新增保存  关联表id给中间表  标记完成
+         * */
+        SysUser sysUser = ShiroUtils.getSysUser();
+//        技师签名
+        dbReportDiagnosisInfrared.setSignatureTechnician(sysUser.getSignatureURL());
+        dbReportDiagnosisInfrared.setIsSee("1");
+        int i = dbReportDiagnosisInfraredService.insertDbReportDiagnosisInfrared(dbReportDiagnosisInfrared);
+        Long id = dbReportDiagnosisInfrared.getId();
+        Long patientId = dbReportDiagnosisInfrared.getPatientId();
+        int induced = TableListUtils.updateResult(id, "infrared", patientId);
+        return toAjax(induced);
     }
 
     /**

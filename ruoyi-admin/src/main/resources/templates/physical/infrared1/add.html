@@ -7,7 +7,6 @@
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-infrared-add">
-        <input name="patientId" class="form-control" type="text" style="display:none" value=" " id="patientId">
         <div class="form-group">
             <label class="col-sm-3 control-label">Integral值
                 ：</label>
@@ -81,8 +80,6 @@
 
     function submitHandler() {
         if ($.validate.form()) {
-            var id = [[${userId}]];
-            document.getElementById('patientId').value = id;
             $.operate.save(prefix + "/add", $('#form-infrared-add').serialize());
         }
     }

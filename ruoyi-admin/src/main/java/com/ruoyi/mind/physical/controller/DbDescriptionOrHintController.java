@@ -123,4 +123,19 @@ public class DbDescriptionOrHintController extends BaseController
     {
         return toAjax(dbDescriptionOrHintService.deleteDbDescriptionOrHintByIds(ids));
     }
+
+
+
+    /**
+     * 根据code获取对象的name和value
+     */
+    @GetMapping("/getlist")
+    @ResponseBody
+    public List<DbDescriptionOrHint> getList(String name)
+    {
+        DbDescriptionOrHint dbDescriptionOrHint1 = new DbDescriptionOrHint();
+        dbDescriptionOrHint1.setTypeCode(name);
+        List<DbDescriptionOrHint> dbDescriptionOrHints = dbDescriptionOrHintService.selectDbDescriptionOrHintList(dbDescriptionOrHint1);
+        return dbDescriptionOrHints;
+    }
 }

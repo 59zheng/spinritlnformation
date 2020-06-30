@@ -11,83 +11,86 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author zheng
  * @date 2020-06-29
  */
-public class DbDescriptionOrHint extends BaseEntity
-        {
-private static final long serialVersionUID=1L;
+public class DbDescriptionOrHint extends BaseEntity {
+    private static final long serialVersionUID = 1L;
 
-        /** 主键 */
-            private Long id;
+    /**
+     * 主键
+     */
+    private Long id;
 
-            /** 属性编号 */
-                                                        @Excel(name = "属性编号" )
-                        private String typeCode;
+    /**
+     * 属性编号
+     */
+    @Excel(name = "属性编号")
+    private String typeCode;
 
-            /** 名称 */
-                                                        @Excel(name = "名称" )
-                        private String name;
+    /**
+     * 名称
+     */
+    @Excel(name = "名称")
+    private String name;
 
-            /** 描述 */
-                                                        @Excel(name = "描述" )
-                        private String describe;
+    /**
+     * 描述
+     */
+    @Excel(name = "描述")
+    private String describe;
 
-            /** 提示 */
-                                                        @Excel(name = "提示" )
-                        private String hint;
+    /**
+     * 提示
+     */
+    @Excel(name = "提示")
+    private String hint;
 
-                            public void setId(Long id)
-            {
-            this.id = id;
-            }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getId()
-            {
-            return id;
-            }
-                            public void setTypeCode(String typeCode)
-            {
-            this.typeCode = typeCode;
-            }
+    public Long getId() {
+        return id;
+    }
 
-    public String getTypeCode()
-            {
-            return typeCode;
-            }
-                            public void setName(String name)
-            {
-            this.name = name;
-            }
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
+    }
 
-    public String getName()
-            {
-            return name;
-            }
-                            public void setDescribe(String describe)
-            {
-            this.describe = describe;
-            }
+    public String getTypeCode() {
+        return typeCode;
+    }
 
-    public String getDescribe()
-            {
-            return describe;
-            }
-                            public void setHint(String hint)
-            {
-            this.hint = hint;
-            }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getHint()
-            {
-            return hint;
-            }
-    
-@Override
-public String toString(){
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                                .append("id" ,getId())
-                                .append("typeCode" ,getTypeCode())
-                                .append("name" ,getName())
-                                .append("describe" ,getDescribe())
-                                .append("hint" ,getHint())
-            .toString();
-        }
-        }
+    public String getName() {
+        return name;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
+
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("typeCode", getTypeCode())
+                .append("name", getName())
+                .append("describe", getDescribe())
+                .append("hint", getHint())
+                .toString();
+    }
+}

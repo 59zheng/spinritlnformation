@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.mind.physical.mapper.DbReportDiagnosisInfraredMapper">
-    
+
     <resultMap type="DbReportDiagnosisInfrared" id="DbReportDiagnosisInfraredResult">
         <result property="id"    column="id"    />
         <result property="patientId"    column="patient_id"    />
-        <result property="integral"    column="integral"    />
-        <result property="centroid"    column="centroid"    />
-        <result property="slope"    column="slope"    />
-        <result property="describe"    column="describe"    />
-        <result property="hint"    column="hint"    />
+        <result property="integral"    column="integral_text"    />
+        <result property="centroid"    column="centroid_text"    />
+        <result property="slope"    column="slope_text"    />
+        <result property="describe"    column="describe_text"    />
+        <result property="hint"    column="hint_text"    />
         <result property="signatureTechnician"    column="signature_technician"    />
         <result property="pictureCnv"    column="picture_cnv"    />
+        <result property="isSee"    column="is_see"    />
     </resultMap>
 
     <sql id="selectDbReportDiagnosisInfraredVo">
-        select id, patient_id, integral, centroid, slope, describe, hint, signature_technician, picture_cnv from db_report_diagnosis_infrared
+        select id, patient_id, integral_text, centroid_text, slope_text, describe_text, hint_text, signature_technician, picture_cnv, is_see from db_report_diagnosis_infrared
     </sql>
 
     <select id="selectDbReportDiagnosisInfraredList" parameterType="DbReportDiagnosisInfrared" resultMap="DbReportDiagnosisInfraredResult">
         <include refid="selectDbReportDiagnosisInfraredVo"/>
-        <where>  
+        <where>
             <if test="patientId != null "> and patient_id = #{patientId}</if>
-            <if test="integral != null  and integral != ''"> and integral = #{integral}</if>
-            <if test="centroid != null  and centroid != ''"> and centroid = #{centroid}</if>
-            <if test="slope != null  and slope != ''"> and slope = #{slope}</if>
-            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
-            <if test="hint != null  and hint != ''"> and hint = #{hint}</if>
+            <if test="integral != null  and integral != ''"> and integral_text = #{integral}</if>
+            <if test="centroid != null  and centroid != ''"> and centroid_text = #{centroid}</if>
+            <if test="slope != null  and slope != ''"> and slope_text = #{slope}</if>
+            <if test="describe != null  and describe != ''"> and describe_text = #{describe}</if>
+            <if test="hint != null  and hint != ''"> and hint_text = #{hint}</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''"> and signature_technician = #{signatureTechnician}</if>
             <if test="pictureCnv != null  and pictureCnv != ''"> and picture_cnv = #{pictureCnv}</if>
+            <if test="isSee != null  and isSee != ''"> and is_see = #{isSee}</if>
         </where>
     </select>
-    
+
     <select id="selectDbReportDiagnosisInfraredById" parameterType="Long" resultMap="DbReportDiagnosisInfraredResult">
         <include refid="selectDbReportDiagnosisInfraredVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertDbReportDiagnosisInfrared" parameterType="DbReportDiagnosisInfrared">
+
+    <insert id="insertDbReportDiagnosisInfrared" parameterType="DbReportDiagnosisInfrared" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into db_report_diagnosis_infrared
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null ">id,</if>
             <if test="patientId != null ">patient_id,</if>
-            <if test="integral != null  and integral != ''">integral,</if>
-            <if test="centroid != null  and centroid != ''">centroid,</if>
-            <if test="slope != null  and slope != ''">slope,</if>
-            <if test="describe != null  and describe != ''">describe,</if>
-            <if test="hint != null  and hint != ''">hint,</if>
+            <if test="integral != null  and integral != ''">integral_text,</if>
+            <if test="centroid != null  and centroid != ''">centroid_text,</if>
+            <if test="slope != null  and slope != ''">slope_text,</if>
+            <if test="describe != null  and describe != ''">describe_text,</if>
+            <if test="hint != null  and hint != ''">hint_text,</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician,</if>
             <if test="pictureCnv != null  and pictureCnv != ''">picture_cnv,</if>
-         </trim>
+            <if test="isSee != null  and isSee != ''">is_see,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
             <if test="patientId != null ">#{patientId},</if>
@@ -62,20 +65,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hint != null  and hint != ''">#{hint},</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''">#{signatureTechnician},</if>
             <if test="pictureCnv != null  and pictureCnv != ''">#{pictureCnv},</if>
-         </trim>
+            <if test="isSee != null  and isSee != ''">#{isSee},</if>
+        </trim>
     </insert>
 
     <update id="updateDbReportDiagnosisInfrared" parameterType="DbReportDiagnosisInfrared">
         update db_report_diagnosis_infrared
         <trim prefix="SET" suffixOverrides=",">
             <if test="patientId != null ">patient_id = #{patientId},</if>
-            <if test="integral != null  and integral != ''">integral = #{integral},</if>
-            <if test="centroid != null  and centroid != ''">centroid = #{centroid},</if>
-            <if test="slope != null  and slope != ''">slope = #{slope},</if>
-            <if test="describe != null  and describe != ''">describe = #{describe},</if>
-            <if test="hint != null  and hint != ''">hint = #{hint},</if>
+            <if test="integral != null  and integral != ''">integral_text = #{integral},</if>
+            <if test="centroid != null  and centroid != ''">centroid_text = #{centroid},</if>
+            <if test="slope != null  and slope != ''">slope_text = #{slope},</if>
+            <if test="describe != null  and describe != ''">describe_text = #{describe},</if>
+            <if test="hint != null  and hint != ''">hint_text = #{hint},</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician = #{signatureTechnician},</if>
             <if test="pictureCnv != null  and pictureCnv != ''">picture_cnv = #{pictureCnv},</if>
+            <if test="isSee != null  and isSee != ''">is_see = #{isSee},</if>
         </trim>
         where id = #{id}
     </update>
@@ -85,10 +90,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDbReportDiagnosisInfraredByIds" parameterType="String">
-        delete from db_report_diagnosis_infrared where id in 
+        delete from db_report_diagnosis_infrared where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

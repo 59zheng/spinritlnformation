@@ -7,22 +7,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="DbDescriptionOrHint" id="DbDescriptionOrHintResult">
         <result property="id"    column="id"    />
         <result property="typeCode"    column="type_code"    />
-        <result property="name"    column="name"    />
-        <result property="describe"    column="describe"    />
-        <result property="hint"    column="hint"    />
+        <result property="name"    column="name_text"    />
+        <result property="describe"    column="describe_text"    />
+        <result property="hint"    column="hint_text"    />
     </resultMap>
 
     <sql id="selectDbDescriptionOrHintVo">
-        select id, type_code, name, describe, hint from db_description_or_hint
+        select id, type_code, name_text, describe_text, hint_text from db_description_or_hint
     </sql>
 
     <select id="selectDbDescriptionOrHintList" parameterType="DbDescriptionOrHint" resultMap="DbDescriptionOrHintResult">
         <include refid="selectDbDescriptionOrHintVo"/>
         <where>  
             <if test="typeCode != null  and typeCode != ''"> and type_code = #{typeCode}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
-            <if test="hint != null  and hint != ''"> and hint = #{hint}</if>
+            <if test="name != null  and name != ''"> and name_text like concat('%', #{name}, '%')</if>
+            <if test="describe != null  and describe != ''"> and describe_text = #{describe}</if>
+            <if test="hint != null  and hint != ''"> and hint_text = #{hint}</if>
         </where>
     </select>
     
@@ -36,9 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null ">id,</if>
             <if test="typeCode != null  and typeCode != ''">type_code,</if>
-            <if test="name != null  and name != ''">name,</if>
-            <if test="describe != null  and describe != ''">describe,</if>
-            <if test="hint != null  and hint != ''">hint,</if>
+            <if test="name != null  and name != ''">name_text,</if>
+            <if test="describe != null  and describe != ''">describe_text,</if>
+            <if test="hint != null  and hint != ''">hint_text,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
@@ -53,9 +53,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update db_description_or_hint
         <trim prefix="SET" suffixOverrides=",">
             <if test="typeCode != null  and typeCode != ''">type_code = #{typeCode},</if>
-            <if test="name != null  and name != ''">name = #{name},</if>
-            <if test="describe != null  and describe != ''">describe = #{describe},</if>
-            <if test="hint != null  and hint != ''">hint = #{hint},</if>
+            <if test="name != null  and name != ''">name_text = #{name},</if>
+            <if test="describe != null  and describe_text != ''">describe = #{describe},</if>
+            <if test="hint != null  and hint != ''">hint_text = #{hint},</if>
         </trim>
         where id = #{id}
     </update>

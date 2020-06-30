@@ -53,22 +53,6 @@
             </form>
         </div>
 
-        <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="physical:infrared:add">
-                <i class="fa fa-plus"></i> 添加
-            </a>
-            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
-               shiro:hasPermission="physical:infrared:edit">
-                <i class="fa fa-edit"></i> 修改
-            </a>
-            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
-               shiro:hasPermission="physical:infrared:remove">
-                <i class="fa fa-remove"></i> 删除
-            </a>
-            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="physical:infrared:export">
-                <i class="fa fa-download"></i> 导出
-            </a>
-        </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
         </div>
@@ -78,7 +62,7 @@
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('physical:infrared:edit')}]];
     var removeFlag = [[${@permission.hasPermi('physical:infrared:remove')}]];
-                                                                                                                                                                                                var prefix = ctx + "physical/infrared";
+    var addFlag = [[${@permission.hasPermi('physical:infrared:add')}]];                                                                                                                    var prefix = ctx + "physical/infrared";
 
     $(function () {
         var options = {
@@ -87,60 +71,85 @@
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
-            modalName: "红外热成像及血流图检查",
+            modalName: "诱发电位",
             columns: [{
                 checkbox: true
             },
-                                                                                                    {
-                            field: 'id',
-                            title: '主键',
-                            visible: false
-                        },
-                                                                                                                        {
-                            field: 'patientId',
-                            title: '病人id'
-                        },
-                                                                                                                        {
-                            field: 'integral',
-                            title: 'Integral值'
-                        },
-                                                                                                                        {
-                            field: 'centroid',
-                            title: 'Centroid值'
-                        },
-                                                                                                                        {
-                            field: 'slope',
-                            title: 'Slope值'
-                        },
-                                                                                                                        {
-                            field: 'describe',
-                            title: '波普描述'
-                        },
-                                                                                                                        {
-                            field: 'hint',
-                            title: '诊断提示'
-                        },
-                                                                                                                        {
-                            field: 'signatureTechnician',
-                            title: '技师签名'
-                        },
-                                                                                                                        {
-                            field: 'pictureCnv',
-                            title: '图片地址'
-                        },
-                                                    {
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'patientName',
+                    title: '病人姓名'
+                },
+                {
+                    field: 'patientSex',
+                    title: '性别'
+                },
+                {
+                    field: 'patientAge',
+                    title: '年龄'
+                },
+                {
+                    field: 'patientCulture',
+                    title: '文化程度'
+                },
+                {
+                    field: 'patientProfessional',
+                    title: '职业'
+                },
+                {
+                    field: 'patientMarriage',
+                    title: '婚姻'
+                },
+                {
+                    field: 'patientBirth',
+                    title: '出生日期'
+                },
+                {
+                    field: 'patientHeight',
+                    title: '身高'
+                },
+                {
+                    field: 'patientWeight',
+                    title: '体重'
+                },
+                {
+                    field: 'hospitalId',
+                    title: '住院号'
+                },
+                {
+                    field: 'outpatientId',
+                    title: '门诊号'
+                },
+                {
+                    field: 'bedId',
+                    title: '床号'
+                },
+                {
+                    field: 'diagnosisCli',
+                    title: '临床诊断'
+                },
+                {
                     title: '操作',
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-success btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="add(\'' + row.id + '\')"><i class="fa fa-edit"></i>新增</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>检测报告</a> ');
                         return actions.join('');
                     }
                 }]
         };
         $.table.init(options);
     });
+
+    function  add(id) {
+        var url = prefix + '/addonly/' + id;
+        $.modal.open("新增红外成像报告",url, '1000', '800')
+    }
 </script>
 </body>
 </html>

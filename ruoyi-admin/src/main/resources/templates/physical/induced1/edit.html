@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('修改诱发电位报告(物理诊断下边)')" />
+    <th:block th:include="include :: header('修改诱发电位报告(物理诊断下边)')"/>
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-induced-edit" th:object="${dbReportDiagnosisInduced}">
         <input name="id" th:field="*{id}" type="hidden">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">病人id：</label>
-            <div class="col-sm-8">
-                <input name="patientId" th:field="*{patientId}" class="form-control" type="text">
-            </div>
-        </div>
+
+        <input name="patientId" th:field="*{patientId}" class="form-control" type="text" style="display: none">
         <div class="form-group">
             <label class="col-sm-3 control-label">p300结论：</label>
             <div class="col-sm-8">
@@ -43,42 +39,7 @@
                 <input name="impressionMvn" th:field="*{impressionMvn}" class="form-control" type="text">
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">p300图片：</label>
-            <div class="col-sm-8">
-                <input name="prictureP300" th:field="*{prictureP300}" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">cnv图片：</label>
-            <div class="col-sm-8">
-                <input name="pictureCnv" th:field="*{pictureCnv}" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">p50图片：</label>
-            <div class="col-sm-8">
-                <input name="pictureP50" th:field="*{pictureP50}" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">mmn图片：</label>
-            <div class="col-sm-8">
-                <input name="pictureMmn" th:field="*{pictureMmn}" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">技师签名：</label>
-            <div class="col-sm-8">
-                <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">医生签名：</label>
-            <div class="col-sm-8">
-                <input name="signatureDoctor" th:field="*{signatureDoctor}" class="form-control" type="text">
-            </div>
-        </div>
+
         <div class="form-group">
             <label class="col-sm-3 control-label">n1lat：</label>
             <div class="col-sm-8">
@@ -199,14 +160,115 @@
                 <input name="cnvAmB" th:field="*{cnvAmB}" class="form-control" type="text">
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片</label>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="img300" th:src="@{prictureP300}">
+                    <input id="prictureP300" name="prictureP300" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshot()">
+						          <span class="btn btn-white ">
+                                      <span>P30      </span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgCnv" th:src="@{pictureCnv}">
+                    <input id="pictureCnv" name="pictureCnv" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshottwo()">
+						          <span class="btn btn-white ">
+                                      <span>CVN</span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgP50" th:src="@{pictureP50}">
+                    <input id="pictureP50" name="pictureP50" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshotthree()">
+						          <span class="btn btn-white ">
+                                      <span>P50      </span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+            <div class="col-sm-4" data-provides="fileinput">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgMmn" th:src="@{pictureMmn}">
+                    <input id="pictureMmn" name="pictureMmn" value="" type="text" style="display:none">
+                </div>
+                <div class="  "
+                     style="max-width: 200px; max-height: 150px;"></div>
+                <div onclick="screenshotfour()">
+						          <span class="btn btn-white ">
+                                      <span>Mmn</span>
+                                      <span>选择图片</span>
+                                  </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">签名</label>
+            <div class="col-sm-4">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="signatureTechnician" src="">
+                </div>
+                <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text"
+                       style="display: none">
+                <span class="btn btn-white ">
+                                      <span>技师 </span>
+                                  </span>
+            </div>
+            <div class="col-sm-4">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="signatureDoctor" src="">
+                </div>
+                <input name="signatureDoctor" th:field="*{signatureDoctor}" class="form-control" type="text"
+                       style="display: none">
+                <span class="btn btn-white ">
+                                      <span>医生 </span>
+                                  </span>
+            </div>
+        </div>
     </form>
 </div>
-<th:block th:include="include :: footer" />
+<th:block th:include="include :: footer"/>
 <script type="text/javascript">
     var prefix = ctx + "physical/induced";
     $("#form-induced-edit").validate({
         focusCleanup: true
     });
+
+    $(function(){
+        var signatureDoctor = "[[${dbReportDiagnosisInduced.signatureDoctor}]]";
+        $("#signatureDoctor").attr('src', signatureDoctor);
+        var signatureTechnician = "[[${dbReportDiagnosisInduced.signatureTechnician}]]";
+        $("#signatureTechnician").attr('src', signatureTechnician);
+        var pictureMmn = "[[${dbReportDiagnosisInduced.pictureMmn}]]";
+        $("#imgMmn").attr('src', pictureMmn);
+        var pictureP50 = "[[${dbReportDiagnosisInduced.pictureP50}]]";
+        $("#imgP50").attr('src', pictureP50);
+        var prictureP300 = "[[${dbReportDiagnosisInduced.prictureP300}]]";
+        $("#img300").attr('src', prictureP300);
+        var pictureCnv = "[[${dbReportDiagnosisInduced.pictureCnv}]]";
+        $("#imgCnv").attr('src', pictureCnv);
+    });
+
 
     function submitHandler() {
         if ($.validate.form()) {
