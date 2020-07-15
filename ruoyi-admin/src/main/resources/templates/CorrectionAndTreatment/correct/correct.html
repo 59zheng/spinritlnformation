@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('心理矫正列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>病人名称：</label>
+                                <input type="text" name="patientName"/>
+                            </li>
+                            <li>
+                                <label>主治医生：</label>
+                                <input type="text" name="attendingPhysician"/>
+                            </li>
+                            <li>
+                                <label>执行技师：</label>
+                                <input type="text" name="technicianName"/>
+                            </li>
+                            <li class="select-time">
+                                <label>执行时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginExecutionTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endExecutionTime]"/>
+                            </li>                
+                            <li>
+                                <label>剩余次数：</label>
+                                <input type="text" name="howMany"/>
+                            </li>
+                            <li>
+                                <label>文档地址：</label>
+                                <input type="text" name="documentAddress"/>
+                            </li>
+                            <li>
+                                <label>父id：</label>
+                                <input type="text" name="fatherId"/>
+                            </li>
+                            <li>
+                                <label>诊断记录id：</label>
+                                <input type="text" name="patientId"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="CorrectionAndTreatment:correct:add">
+                    <i class="fa fa-plus"></i> 新增
+                </a>
+                <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="CorrectionAndTreatment:correct:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var addFlag = [[${@permission.hasPermi('CorrectionAndTreatment:correct:add')}]];
+        var editFlag = [[${@permission.hasPermi('CorrectionAndTreatment:correct:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('CorrectionAndTreatment:correct:remove')}]];
+        var prefix = ctx + "CorrectionAndTreatment/correct";
+
+        $(function() {
+            var options = {
+                code: "id",
+                parentCode: "fatherId",
+                expandColumn: "1",
+                uniqueId: "id",
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "心理矫正",
+                columns: [{
+                    field: 'selectItem', 
+                    radio: true
+                },
+                {
+                    field: 'patientName', 
+                    title: '病人名称',
+                    align: 'left'
+                },
+                {
+                    field: 'attendingPhysician', 
+                    title: '主治医生',
+                    align: 'left'
+                },
+                {
+                    field: 'technicianName', 
+                    title: '执行技师',
+                    align: 'left'
+                },
+                {
+                    field: 'executionTime', 
+                    title: '执行时间',
+                    align: 'left'
+                },
+                {
+                    field: 'howMany', 
+                    title: '剩余次数',
+                    align: 'left'
+                },
+                {
+                    field: 'documentAddress', 
+                    title: '文档地址',
+                    align: 'left'
+                },
+                {
+                    field: 'fatherId', 
+                    title: '父id',
+                    align: 'left'
+                },
+                {
+                    field: 'patientId', 
+                    title: '诊断记录id',
+                    align: 'left'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    align: 'left',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i>新增</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.treeTable.init(options);
+        });
+    </script>
+</body>
+</html>

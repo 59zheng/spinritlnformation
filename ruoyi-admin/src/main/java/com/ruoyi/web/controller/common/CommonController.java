@@ -81,6 +81,26 @@ public class CommonController {
             return AjaxResult.error(e.getMessage());
         }
     }
+    /**
+     * 通用上传请求
+     */
+    @PostMapping("/common/uploadInput")
+    @ResponseBody
+    public AjaxResult uploadInput(MultipartFile file_data) throws Exception {
+        try {
+            // 上传文件路径
+            String filePath = Global.getUploadPath();
+            // 上传并返回新文件名称
+            String fileName = FileUploadUtils.upload(filePath, file_data);
+            String url = serverConfig.getUrl() + fileName;
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("fileName", fileName);
+            ajax.put("url", url);
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
 
     /**
      * 本地资源通用下载

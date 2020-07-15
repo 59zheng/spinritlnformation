@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('脑电诊断列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>病人id：</label>
+                            <input type="text" name="patientId"/>
+                        </li>
+                        <li>
+                            <label>技师签名：</label>
+                            <input type="text" name="signatureTechnician"/>
+                        </li>
+                        <li>
+                            <label>医生签名：</label>
+                            <input type="text" name="signatureDoctor"/>
+                        </li>
+                        <li>
+                            <label>脑电图号：</label>
+                            <input type="text" name="electricalNo"/>
+                        </li>
+                        <li>
+                            <label>左右利手：</label>
+                            <input type="text" name="handedness"/>
+                        </li>
+                        <li>
+                            <label>节律：</label>
+                            <input type="text" name="rhythmText"/>
+                        </li>
+                        <li>
+                            <label>慢波：</label>
+                            <input type="text" name="slowWave"/>
+                        </li>
+                        <li>
+                            <label>快波：</label>
+                            <input type="text" name="dastWave"/>
+                        </li>
+                        <li>
+                            <label>病理波：</label>
+                            <input type="text" name="pathologyWave"/>
+                        </li>
+                        <li>
+                            <label>诱发实验：</label>
+                            <input type="text" name="inducedExperimental"/>
+                        </li>
+                        <li>
+                            <label>临床发作：</label>
+                            <input type="text" name="clinicalSeizures"/>
+                        </li>
+                        <li>
+                            <label>备注：</label>
+                            <input type="text" name="noteText"/>
+                        </li>
+                        <li>
+                            <label>结果：</label>
+                            <input type="text" name="resultsText"/>
+                        </li>
+                        <li>
+                            <label>建议：</label>
+                            <input type="text" name="adviceText"/>
+                        </li>
+                        <li>
+                            <label>是否完成：</label>
+                            <input type="text" name="isSee"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="physical:electrical:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="physical:electrical:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="physical:electrical:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="physical:electrical:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('physical:electrical:edit')}]];
+    var addFlag = [[${@permission.hasPermi('physical:electrical:add')}]];
+    var removeFlag = [[${@permission.hasPermi('physical:electrical:remove')}]];
+    var prefix = ctx + "physical/electrical1";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "脑电诊断",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'associatedId',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'dbPatientMessage.patientName',
+                    title: '病人姓名'
+                },
+                {
+                    field: 'dbPatientMessage.patientSex',
+                    title: '性别'
+                },
+                {
+                    field: 'dbPatientMessage.patientAge',
+                    title: '年龄'
+                },
+
+                {
+                    field: 'dbPatientMessage.hospitalId',
+                    title: '住院号'
+                },
+                {
+                    field: 'dbPatientMessage.outpatientId',
+                    title: '门诊号'
+                },
+                {
+                    field: 'dbPatientMessage.bedId',
+                    title: '床号'
+                },
+                {
+                    field: 'dbPatientMessage.diagnosisCli',
+                    title: '临床诊断'
+                },
+                {
+                    field: 'createTime',
+                    title: '诊断时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.associatedId + '\')"><i class="fa fa-edit"></i>修改</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' +'" href="javascript:void(0)" onclick="openn(\'' + row.associatedId + '\')"><i class="fa fa-remove"></i>导出</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+    function  openn(id) {
+        var url = prefix + '/generateWord/' + id;
+        window.location.href=url;
+    }
+</script>
+</body>
+</html>

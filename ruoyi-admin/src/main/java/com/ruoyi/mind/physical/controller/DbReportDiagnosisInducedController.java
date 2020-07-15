@@ -133,9 +133,10 @@ public class DbReportDiagnosisInducedController extends BaseController {
 //        技师签名
         dbReportDiagnosisInduced.setSignatureTechnician(sysUser.getSignatureURL());
 //        医生签名
-        SysUser sysUser1 = sysUserService.selectUserById(dbReportDiagnosisInduced.getPatientId());
+        SysUser sysUser1 = sysUserService.selectUserById(TableListUtils.getTeamId(dbReportDiagnosisInduced.getPatientId()));
         dbReportDiagnosisInduced.setSignatureDoctor(sysUser1.getSignatureURL());
         int i = dbReportDiagnosisInducedService.insertDbReportDiagnosisInduced(dbReportDiagnosisInduced);
+
         Long id = dbReportDiagnosisInduced.getId();
         Long patientId = dbReportDiagnosisInduced.getPatientId();
         int induced = TableListUtils.updateResult(id, "induced", patientId);

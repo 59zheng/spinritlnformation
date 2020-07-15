@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('添加物理治疗')"/>
+    <th:block th:include="include :: select2-css"/>
+    <th:block th:include="include :: bootstrap-select-css"/>
+</head>
+<body>
+<div class="ui-layout-center">
+    <div class="container-div">
+        <div class="row">
+            <!--下拉选择内容-->
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label class="font-noraml">治疗项目</label>
+                    <select class="form-control" id="county">
+                        <option value="">--请选择开发语言--</option>
+                        <option value="Java">Java</option>
+                        <option value="PHP">PHP</option>
+                        <option value=".NET">.NET</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label class="font-noraml">次数</label>
+                    <input name="patientName" id="patient" class="form-control" type="text">
+                </div>
+                <div class="col-sm-2" style=" text-align: center;padding-top: 20px">
+                    <button class="btn btn-primary" type="button" onclick="addSave()">添加</button>
+                </div>
+
+            </div>
+        </div>
+        <!--from展示内容-->
+        <div class="row">
+            <div class="container-div">
+                <div class="btn-group-sm" id="toolbar" role="group">
+                    <a class="btn btn-danger multiple disabled" onclick="removeRow()">
+                        <i class="fa fa-remove"></i> 删除选择行
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript" th:inline="javascript">
+    var prefix = ctx + "registered/message1";
+    var data = [[${data}]];
+    console.log(data);
+    if (data == null) {
+        $(function () {
+            var options = {
+
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                pagination: false,
+                uniqueId: "userId",
+                height: 400,
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'userId',
+                        title: '用户ID',
+                        visible: false,
+                    },
+
+                    {
+                        field: 'userCode',
+                        title: '用户编号'
+                    },
+                    {
+                        field: 'userName',
+                        title: '用户姓名'
+                    },
+                ]
+
+            };
+            $.table.init(options);
+        });
+    } else {
+        $(function () {
+            var options = {
+                data: data,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                pagination: false,
+                uniqueId: "userId",
+                height: 400,
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'userId',
+                        title: '用户ID',
+                        visible: false,
+                    },
+
+                    {
+                        field: 'userCode',
+                        title: '用户编号'
+                    },
+                    {
+                        field: 'userName',
+                        title: '用户姓名'
+                    },
+
+                ]
+
+            };
+            $.table.init(options);
+        });
+
+    }
+
+    /*填写下拉内容*/
+    //下拉框赋值
+    $(function () {
+        var list = [[${list}]];
+        var a2 = JSON.parse(list);
+        var county = $('#county');
+        county.empty();
+        county.append('<option value="' + "" + '">' + "请选择" + '</option>');
+        for (var i = 0; i < a2.length; i++) {
+            county.append('<option value="' + i + '">' + a2[i].name + '</option>');
+        }
+    });
+
+    /*添加按钮确认,添加到后边from.随后清空*/
+    function addSave() {
+        //获取下拉选中值
+        var options = $("#county option:selected");
+        var mobi = $("#patient").val();
+        /*
+        * 判断是否已经有值
+        * */
+        var  text2=options.text();
+        console.log(text2);
+        var mySelect = document.getElementById("county");
+        for(var i=0;i<mySelect.length;i++){
+            if(mySelect.options[i].text == text2){//删除公文库管理的显示
+                mySelect.options.remove(i);
+                break;
+            }
+        }
+
+        //    给两个input赋值
+        var randomId = 100 + ~~(Math.random() * 100);
+
+        $("#" + table.options.id).bootstrapTable('insertRow', {
+            index: table.size - 1, // 你想插入到哪，0表示第一行
+            row: {
+                userId: randomId,
+                userCode: options.text(),
+                userName: mobi
+            }
+        });
+    }
+
+    /* 删除指定表格行 */
+    function removeRow() {
+        var ids = $.table.selectColumns("userId");
+        if (ids.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        $("#" + table.options.id).bootstrapTable('remove', {
+            field: 'userId',
+            values: ids
+        })
+    }
+
+    /* 新增表格行 */
+
+    /*from提交*/
+    function submitHandler() {
+        var userId = [[${userId}]];
+        var ids;
+        var data2 = $("#" + table.options.id).bootstrapTable('getData');
+        ids = JSON.stringify(data2);
+        console.log(ids);
+        var url = prefix + '/cureAddSave';
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: {
+                userId: userId,
+                ids: ids
+            },
+            success: function (result) {
+                $.modal.close();
+
+            }
+        });
+
+        $.modal.close();
+    }
+
+
+</script>
+</body>
+</html>

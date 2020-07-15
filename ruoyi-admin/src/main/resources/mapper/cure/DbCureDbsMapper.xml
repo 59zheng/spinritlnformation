@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.cure.mapper.DbCureDbsMapper">
+    
+    <resultMap type="DbCureDbs" id="DbCureDbsResult">
+        <result property="id"    column="id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="attendingPhysician"    column="attending_physician"    />
+        <result property="technicianName"    column="technician_name"    />
+        <result property="executionTime"    column="execution_time"    />
+        <result property="howMany"    column="how_many"    />
+        <result property="documentAddress"    column="document_address"    />
+        <result property="fatherId"    column="father_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectDbCureDbsVo">
+        select id, patient_name, attending_physician, technician_name, execution_time, how_many, document_address, father_id, patient_id from db_cure_dbs
+    </sql>
+
+    <select id="selectDbCureDbsList" parameterType="DbCureDbs" resultMap="DbCureDbsResult">
+        <include refid="selectDbCureDbsVo"/>
+        <where>  
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''"> and attending_physician = #{attendingPhysician}</if>
+            <if test="technicianName != null  and technicianName != ''"> and technician_name like concat('%', #{technicianName}, '%')</if>
+            <if test="executionTime != null "> and execution_time = #{executionTime}</if>
+            <if test="howMany != null "> and how_many = #{howMany}</if>
+            <if test="documentAddress != null  and documentAddress != ''"> and document_address = #{documentAddress}</if>
+            <if test="fatherId != null "> and father_id = #{fatherId}</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+        </where>
+        order by father_id
+    </select>
+    
+    <select id="selectDbCureDbsById" parameterType="Long" resultMap="DbCureDbsResult">
+        select t.id, t.patient_name, t.attending_physician, t.technician_name, t.execution_time, t.how_many, t.document_address, t.father_id, t.patient_id, p.patient_name as parent_name
+        from db_cure_dbs t
+        left join db_cure_dbs p on p.id = t.father_id
+        where t.id = #{id}
+    </select>
+        
+    <insert id="insertDbCureDbs" parameterType="DbCureDbs" useGeneratedKeys="true" keyProperty="id">
+        insert into db_cure_dbs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">attending_physician,</if>
+            <if test="technicianName != null  and technicianName != ''">technician_name,</if>
+            <if test="executionTime != null ">execution_time,</if>
+            <if test="howMany != null ">how_many,</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address,</if>
+            <if test="fatherId != null ">father_id,</if>
+            <if test="patientId != null ">patient_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">#{attendingPhysician},</if>
+            <if test="technicianName != null  and technicianName != ''">#{technicianName},</if>
+            <if test="executionTime != null ">#{executionTime},</if>
+            <if test="howMany != null ">#{howMany},</if>
+            <if test="documentAddress != null  and documentAddress != ''">#{documentAddress},</if>
+            <if test="fatherId != null ">#{fatherId},</if>
+            <if test="patientId != null ">#{patientId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbCureDbs" parameterType="DbCureDbs">
+        update db_cure_dbs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">attending_physician = #{attendingPhysician},</if>
+            <if test="technicianName != null  and technicianName != ''">technician_name = #{technicianName},</if>
+            <if test="executionTime != null ">execution_time = #{executionTime},</if>
+            <if test="howMany != null ">how_many = #{howMany},</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address = #{documentAddress},</if>
+            <if test="fatherId != null ">father_id = #{fatherId},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbCureDbsById" parameterType="Long">
+        delete from db_cure_dbs where id = #{id}
+    </delete>
+
+    <delete id="deleteDbCureDbsByIds" parameterType="String">
+        delete from db_cure_dbs where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

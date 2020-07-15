@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.research.mapper.DbResearchPharmacologicalMapper">
+    
+    <resultMap type="DbResearchPharmacological" id="DbResearchPharmacologicalResult">
+        <result property="id"    column="id"    />
+        <result property="joinTime"    column="join_time"    />
+        <result property="attendingPhysician"    column="attending_physician"    />
+        <result property="diagnosisCli"    column="diagnosis_cli"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectDbResearchPharmacologicalVo">
+        select id, join_time, attending_physician, diagnosis_cli, patient_id, group_name, parent_id from db_research_pharmacological
+    </sql>
+
+    <select id="selectDbResearchPharmacologicalList" parameterType="DbResearchPharmacological" resultMap="DbResearchPharmacologicalResult">
+        <include refid="selectDbResearchPharmacologicalVo"/>
+        <where>  
+            <if test="joinTime != null "> and join_time = #{joinTime}</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''"> and attending_physician = #{attendingPhysician}</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''"> and diagnosis_cli = #{diagnosisCli}</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+        order by parent_id
+    </select>
+    
+    <select id="selectDbResearchPharmacologicalById" parameterType="Long" resultMap="DbResearchPharmacologicalResult">
+        select t.id, t.join_time, t.attending_physician, t.diagnosis_cli, t.patient_id, t.group_name, t.parent_id, p.group_name as parent_name
+        from db_research_pharmacological t
+        left join db_research_pharmacological p on p.id = t.parent_id
+        where t.id = #{id}
+    </select>
+        
+    <insert id="insertDbResearchPharmacological" parameterType="DbResearchPharmacological" useGeneratedKeys="true" keyProperty="id">
+        insert into db_research_pharmacological
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="joinTime != null ">join_time,</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">attending_physician,</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''">diagnosis_cli,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="groupName != null  and groupName != ''">group_name,</if>
+            <if test="parentId != null ">parent_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="joinTime != null ">#{joinTime},</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">#{attendingPhysician},</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''">#{diagnosisCli},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="groupName != null  and groupName != ''">#{groupName},</if>
+            <if test="parentId != null ">#{parentId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbResearchPharmacological" parameterType="DbResearchPharmacological">
+        update db_research_pharmacological
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="joinTime != null ">join_time = #{joinTime},</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">attending_physician = #{attendingPhysician},</if>
+            <if test="diagnosisCli != null  and diagnosisCli != ''">diagnosis_cli = #{diagnosisCli},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="groupName != null  and groupName != ''">group_name = #{groupName},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbResearchPharmacologicalById" parameterType="Long">
+        delete from db_research_pharmacological where id = #{id}
+    </delete>
+
+    <delete id="deleteDbResearchPharmacologicalByIds" parameterType="String">
+        delete from db_research_pharmacological where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,15 +1,16 @@
 package com.ruoyi.mind.registered.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
 import com.ruoyi.mind.diagnosis.service.IDbDiagonsisProjectService;
 import com.ruoyi.mind.registered.domain.DbPatientAssociated;
 import com.ruoyi.mind.registered.service.IDbPatientAssociatedService;
+import com.ruoyi.mind.research.domain.DbResearchPharmacological;
+import com.ruoyi.mind.research.service.IDbResearchPharmacologicalService;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -56,6 +57,10 @@ public class DbPatientMessageEndController extends BaseController {
 
     @Autowired
     private IDbPatientAssociatedService dbPatientAssociatedService;
+
+
+    @Autowired
+    private IDbResearchPharmacologicalService dbResearchPharmacologicalService;
 
 
     @RequiresPermissions("registered:message:view")
@@ -193,8 +198,9 @@ public class DbPatientMessageEndController extends BaseController {
      * */
     @GetMapping("/diagnosisAdd/{userId}")
     public String diagnosisAdd(@PathVariable("userId") Long userId, ModelMap map) {
-        map.put("userId", userId);
+         map.put("userId", userId);
         DbDiagonsisProject dbDiagonsisProject = new DbDiagonsisProject();
+        dbDiagonsisProject.setProductId(1L);
         List<DbDiagonsisProject> dbDiagonsisProjects = dbDiagonsisProjectService.selectDbDiagonsisProjectList(dbDiagonsisProject);
         for (int i = 0; i < dbDiagonsisProjects.size(); i++) {
             if (dbDiagonsisProjects.get(i).getProductId() == null) {
@@ -208,25 +214,21 @@ public class DbPatientMessageEndController extends BaseController {
         DbPatientMessage dbPatientMessage = dbPatientMessageService.selectDbPatientMessageById(userId);
         String isAddDetection = dbPatientMessage.getIsAddDetection();
         String[] split = isAddDetection.split(",");
-        if (split.length>0){
+        if (split.length > 0) {
 
-        for (String s1 : split) {
-            if (!s1.equals("")) {
-                DbDiagonsisProject dbDiagonsisProject1 = dbDiagonsisProjectService.selectDbDiagonsisProjectById(Long.valueOf(s1));
-                dbDiagonsisProjects2.add(dbDiagonsisProject1);
-                if (dbDiagonsisProjects.size() > 0) {
-                    for (DbDiagonsisProject diagonsisProject : dbDiagonsisProjects) {
-                        if (diagonsisProject.getId().toString().equals(s1)) {
-                            dbDiagonsisProjects.remove(diagonsisProject);
-                            if (dbDiagonsisProjects.size() == 0) {
-                                break;
+            for (String s1 : split) {
+                if (!s1.equals("")) {
+                    DbDiagonsisProject dbDiagonsisProject1 = dbDiagonsisProjectService.selectDbDiagonsisProjectById(Long.valueOf(s1));
+                    dbDiagonsisProjects2.add(dbDiagonsisProject1);
+                    if (dbDiagonsisProjects.size() > 0 && dbDiagonsisProjects != null) {
+                        for (int i = 0; i < dbDiagonsisProjects.size(); i++) {
+                            if (dbDiagonsisProjects.get(i).getId()==dbDiagonsisProject1.getId()){
+                                dbDiagonsisProjects.remove(i);
                             }
                         }
                     }
                 }
             }
-        }
-
 
 
         }
@@ -267,5 +269,101 @@ public class DbPatientMessageEndController extends BaseController {
         }
         return toAjax(dbPatientMessageService.updateDbPatientMessage(dbPatientMessage));
     }
+
+    /*
+     * 添加药理入组
+     * */
+    @GetMapping("/groupAdd/{userId}")
+    public String groupAdd(@PathVariable("userId") Long userId, ModelMap map) {
+        map.put("userId", userId);
+        DbResearchPharmacological dbResearchPharmacological = new DbResearchPharmacological();
+        dbResearchPharmacological.setParentId(0l);
+        List<DbResearchPharmacological> list2 = dbResearchPharmacologicalService.selectDbResearchPharmacologicalList(dbResearchPharmacological);
+        dbResearchPharmacological.setPatientId(userId);
+        List<DbResearchPharmacological> list3 = dbResearchPharmacologicalService.selectDbResearchPharmacologicalList(dbResearchPharmacological);
+
+        String json = JSON.toJSONString(list2).trim();
+        String s = StringEscapeUtils.unescapeHtml(json);
+        String json2 = JSON.toJSONString(list3).trim();
+        String s2 = StringEscapeUtils.unescapeHtml(json2);
+//      选中的
+        map.put("list2", s2);
+//        未选中的
+        map.put("list", s);
+        return prefix + "/researchbox";
+    }
+
+    /*
+     * 保存药理入组
+     * */
+    @GetMapping("/groupSave")
+    @ResponseBody
+    public AjaxResult groupSave(String ids, String userId) {
+        String[] split = ids.split(",");
+        List<String> strings = Arrays.asList(split);
+        DbPatientMessage dbPatientMessage = dbPatientMessageService.selectDbPatientMessageById(Long.valueOf(userId));
+        SysUser sysUser = userService.selectUserById(dbPatientMessage.getTaemId());
+        strings.forEach(item -> {
+            DbResearchPharmacological dbResearchPharmacological = new DbResearchPharmacological();
+            dbResearchPharmacological.setParentId(Long.parseLong(item));
+            dbResearchPharmacological.setPatientId(Long.valueOf(userId));
+            dbResearchPharmacological.setGroupName(DateUtils.getDate());
+            dbResearchPharmacological.setAttendingPhysician(sysUser.getUserName());
+            dbResearchPharmacological.setJoinTime(new Date());
+            dbResearchPharmacological.setDiagnosisCli(dbPatientMessage.getDiagnosisCli());
+            int i = dbResearchPharmacologicalService.insertDbResearchPharmacological(dbResearchPharmacological);
+        });
+
+        return toAjax(1);
+    }
+
+
+    /*
+     * 添加物理治疗
+     * */
+    @GetMapping("/cureAdd/{userId}")
+    public String cureAdd(@PathVariable("userId") Long userId, ModelMap map) {
+        map.put("userId", userId);
+        DbDiagonsisProject dbDiagonsisProject = new DbDiagonsisProject();
+        dbDiagonsisProject.setProductId(6L);
+        List<DbDiagonsisProject> dbDiagonsisProjects = dbDiagonsisProjectService.selectDbDiagonsisProjectList(dbDiagonsisProject);
+        String json = JSON.toJSONString(dbDiagonsisProjects).trim();
+        String s = StringEscapeUtils.unescapeHtml(json);
+//        下拉选项
+        map.put("list", s);
+        return prefix + "/cureAdd";
+    }
+
+
+    /*
+     * 添加物理治疗
+     * */
+    @GetMapping("/cureAddSave")
+    @ResponseBody
+    public AjaxResult cureAddSave(String ids, String userId) {
+        System.out.println(ids);
+        List<Map> maps = (List<Map>) JSON.parse(ids);
+        maps.forEach(item->{
+//            治疗项目
+            String userCode = (String) item.get("userCode");
+//             治疗次数
+            String userName = (String) item.get("userName");
+//          存储
+            DbDiagonsisProject dbDiagonsisProject = new DbDiagonsisProject();
+            dbDiagonsisProject.setName(userCode);
+            List<DbDiagonsisProject> dbDiagonsisProjects = dbDiagonsisProjectService.selectDbDiagonsisProjectList(dbDiagonsisProject);
+            DbPatientAssociated dbPatientAssociated = new DbPatientAssociated();
+            dbPatientAssociated.setTreatmentNum(Long.parseLong(userName));
+            dbPatientAssociated.setPatientId(Long.parseLong(userId));
+            dbPatientAssociated.setAssociatedTable(dbDiagonsisProjects.get(0).getCodeName());
+            dbPatientAssociated.setCreateTime(new Date());
+            dbPatientAssociated.setIsOk("0");
+            int i = dbPatientAssociatedService.insertDbPatientAssociated(dbPatientAssociated);
+        });
+
+
+        return toAjax(1);
+    }
+
 
 }

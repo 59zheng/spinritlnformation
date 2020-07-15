@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改脑电诊断')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-electrical-edit" th:object="${dbReportDiagnosisElectrical}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">病人id：</label>
+                <div class="col-sm-8">
+                    <input name="patientId" th:field="*{patientId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">技师签名：</label>
+                <div class="col-sm-8">
+                    <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">医生签名：</label>
+                <div class="col-sm-8">
+                    <input name="signatureDoctor" th:field="*{signatureDoctor}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">脑电图号：</label>
+                <div class="col-sm-8">
+                    <input name="electricalNo" th:field="*{electricalNo}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">左右利手：</label>
+                <div class="col-sm-8">
+                    <input name="handedness" th:field="*{handedness}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">节律：</label>
+                <div class="col-sm-8">
+                    <input name="rhythmText" th:field="*{rhythmText}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">慢波：</label>
+                <div class="col-sm-8">
+                    <input name="slowWave" th:field="*{slowWave}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">快波：</label>
+                <div class="col-sm-8">
+                    <input name="dastWave" th:field="*{dastWave}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">病理波：</label>
+                <div class="col-sm-8">
+                    <input name="pathologyWave" th:field="*{pathologyWave}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">诱发实验：</label>
+                <div class="col-sm-8">
+                    <input name="inducedExperimental" th:field="*{inducedExperimental}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">临床发作：</label>
+                <div class="col-sm-8">
+                    <input name="clinicalSeizures" th:field="*{clinicalSeizures}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="noteText" th:field="*{noteText}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">结果：</label>
+                <div class="col-sm-8">
+                    <input name="resultsText" th:field="*{resultsText}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">建议：</label>
+                <div class="col-sm-8">
+                    <input name="adviceText" th:field="*{adviceText}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否完成：</label>
+                <div class="col-sm-8">
+                    <input name="isSee" th:field="*{isSee}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "physical/electrical";
+        $("#form-electrical-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-electrical-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

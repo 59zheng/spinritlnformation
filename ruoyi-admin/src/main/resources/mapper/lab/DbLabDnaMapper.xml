@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.lab.mapper.DbLabDnaMapper">
+    
+    <resultMap type="DbLabDna" id="DbLabDnaResult">
+        <result property="id"    column="id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="attendingPhysician"    column="attending_physician"    />
+        <result property="technicianName"    column="technician_name"    />
+        <result property="executionTime"    column="execution_time"    />
+        <result property="howMany"    column="how_many"    />
+        <result property="documentAddress"    column="document_address"    />
+    </resultMap>
+
+    <sql id="selectDbLabDnaVo">
+        select id, patient_name, patient_id, attending_physician, technician_name, execution_time, how_many, document_address from db_lab_dna
+    </sql>
+
+    <select id="selectDbLabDnaList" parameterType="DbLabDna" resultMap="DbLabDnaResult">
+        <include refid="selectDbLabDnaVo"/>
+        <where>  
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''"> and attending_physician = #{attendingPhysician}</if>
+            <if test="technicianName != null  and technicianName != ''"> and technician_name like concat('%', #{technicianName}, '%')</if>
+            <if test="executionTime != null "> and execution_time = #{executionTime}</if>
+            <if test="howMany != null "> and how_many = #{howMany}</if>
+            <if test="documentAddress != null  and documentAddress != ''"> and document_address = #{documentAddress}</if>
+        </where>
+    </select>
+    
+    <select id="selectDbLabDnaById" parameterType="Long" resultMap="DbLabDnaResult">
+        <include refid="selectDbLabDnaVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDbLabDna" parameterType="DbLabDna" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into db_lab_dna
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="patientId != null ">patient_id,</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">attending_physician,</if>
+            <if test="technicianName != null  and technicianName != ''">technician_name,</if>
+            <if test="executionTime != null ">execution_time,</if>
+            <if test="howMany != null ">how_many,</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">#{attendingPhysician},</if>
+            <if test="technicianName != null  and technicianName != ''">#{technicianName},</if>
+            <if test="executionTime != null ">#{executionTime},</if>
+            <if test="howMany != null ">#{howMany},</if>
+            <if test="documentAddress != null  and documentAddress != ''">#{documentAddress},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbLabDna" parameterType="DbLabDna">
+        update db_lab_dna
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="attendingPhysician != null  and attendingPhysician != ''">attending_physician = #{attendingPhysician},</if>
+            <if test="technicianName != null  and technicianName != ''">technician_name = #{technicianName},</if>
+            <if test="executionTime != null ">execution_time = #{executionTime},</if>
+            <if test="howMany != null ">how_many = #{howMany},</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address = #{documentAddress},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbLabDnaById" parameterType="Long">
+        delete from db_lab_dna where id = #{id}
+    </delete>
+
+    <delete id="deleteDbLabDnaByIds" parameterType="String">
+        delete from db_lab_dna where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

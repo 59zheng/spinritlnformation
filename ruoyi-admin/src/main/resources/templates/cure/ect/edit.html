@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改电休克治疗')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-ect-edit" th:object="${dbCureEct}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">病人名称：</label>
+                <div class="col-sm-8">
+                    <input name="patientName" th:field="*{patientName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">主治医生：</label>
+                <div class="col-sm-8">
+                    <input name="attendingPhysician" th:field="*{attendingPhysician}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">执行技师：</label>
+                <div class="col-sm-8">
+                    <input name="technicianName" th:field="*{technicianName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">执行时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="executionTime" th:value="${#dates.format(dbCureEct.executionTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">剩余次数：</label>
+                <div class="col-sm-8">
+                    <input name="howMany" th:field="*{howMany}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">文档地址：</label>
+                <div class="col-sm-8">
+                    <input name="documentAddress" th:field="*{documentAddress}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">父id：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input id="treeId" name="fatherId" type="hidden" th:field="*{fatherId}" />
+                        <input class="form-control" type="text" onclick="selectEctTree()" id="treeName" readonly="true" th:field="*{parentName}">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">诊断记录id：</label>
+                <div class="col-sm-8">
+                    <input name="patientId" th:field="*{patientId}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "cure/ect";
+        $("#form-ect-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-ect-edit').serialize());
+            }
+        }
+
+        $("input[name='executionTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        /*电休克治疗-新增-选择父部门树*/
+        function selectEctTree() {
+            var options = {
+                title: '电休克治疗选择',
+                width: "380",
+                url: prefix + "/selectEctTree/" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var body = layer.getChildFrame('body', index);
+               $("#treeId").val(body.find('#treeId').val());
+               $("#treeName").val(body.find('#treeName').val());
+               layer.close(index);
+        }
+    </script>
+</body>
+</html>

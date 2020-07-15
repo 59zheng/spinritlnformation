@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 病人诊断记录关联检测报告对象 db_patient_associated
  *
  * @author zheng
- * @date 2020-06-23
+ * @date 2020-07-10
  */
 public class DbPatientAssociated extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -42,6 +42,12 @@ public class DbPatientAssociated extends BaseEntity {
      */
     @Excel(name = "是否完成")
     private String isOk;
+
+    /**
+     * 治疗次数
+     */
+    @Excel(name = "治疗次数")
+    private Long treatmentNum;
 
     public void setId(Long id) {
         this.id = id;
@@ -83,6 +89,14 @@ public class DbPatientAssociated extends BaseEntity {
         return isOk;
     }
 
+    public void setTreatmentNum(Long treatmentNum) {
+        this.treatmentNum = treatmentNum;
+    }
+
+    public Long getTreatmentNum() {
+        return treatmentNum;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -92,6 +106,7 @@ public class DbPatientAssociated extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("associatedTable", getAssociatedTable())
                 .append("isOk", getIsOk())
+                .append("treatmentNum", getTreatmentNum())
                 .toString();
     }
 }

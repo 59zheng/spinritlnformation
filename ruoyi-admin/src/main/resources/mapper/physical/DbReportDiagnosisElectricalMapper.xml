@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.physical.mapper.DbReportDiagnosisElectricalMapper">
+
+    <resultMap type="DbReportDiagnosisElectrical" id="DbReportDiagnosisElectricalResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="signatureTechnician"    column="signature_technician"    />
+        <result property="signatureDoctor"    column="signature_doctor"    />
+        <result property="electricalNo"    column="electrical_no"    />
+        <result property="handedness"    column="handedness"    />
+        <result property="rhythmText"    column="rhythm_text"    />
+        <result property="slowWave"    column="slow_wave"    />
+        <result property="dastWave"    column="dast_wave"    />
+        <result property="pathologyWave"    column="pathology_wave"    />
+        <result property="inducedExperimental"    column="induced_experimental"    />
+        <result property="clinicalSeizures"    column="clinical_seizures"    />
+        <result property="noteText"    column="note_text"    />
+        <result property="resultsText"    column="results_text"    />
+        <result property="adviceText"    column="advice_text"    />
+        <result property="isSee"    column="is_see"    />
+        <result property="electricalPicture"    column="electrical_picture"    />
+    </resultMap>
+
+    <sql id="selectDbReportDiagnosisElectricalVo">
+        select id, patient_id, signature_technician, signature_doctor, electrical_no, handedness, rhythm_text, slow_wave, dast_wave, pathology_wave, induced_experimental, clinical_seizures, note_text, results_text, advice_text, is_see, electrical_picture from db_report_diagnosis_electrical
+    </sql>
+
+    <select id="selectDbReportDiagnosisElectricalList" parameterType="DbReportDiagnosisElectrical" resultMap="DbReportDiagnosisElectricalResult">
+        <include refid="selectDbReportDiagnosisElectricalVo"/>
+        <where>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''"> and signature_technician = #{signatureTechnician}</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''"> and signature_doctor = #{signatureDoctor}</if>
+            <if test="electricalNo != null  and electricalNo != ''"> and electrical_no = #{electricalNo}</if>
+            <if test="handedness != null  and handedness != ''"> and handedness = #{handedness}</if>
+            <if test="rhythmText != null  and rhythmText != ''"> and rhythm_text = #{rhythmText}</if>
+            <if test="slowWave != null  and slowWave != ''"> and slow_wave = #{slowWave}</if>
+            <if test="dastWave != null  and dastWave != ''"> and dast_wave = #{dastWave}</if>
+            <if test="pathologyWave != null  and pathologyWave != ''"> and pathology_wave = #{pathologyWave}</if>
+            <if test="inducedExperimental != null  and inducedExperimental != ''"> and induced_experimental = #{inducedExperimental}</if>
+            <if test="clinicalSeizures != null  and clinicalSeizures != ''"> and clinical_seizures = #{clinicalSeizures}</if>
+            <if test="noteText != null  and noteText != ''"> and note_text = #{noteText}</if>
+            <if test="resultsText != null  and resultsText != ''"> and results_text = #{resultsText}</if>
+            <if test="adviceText != null  and adviceText != ''"> and advice_text = #{adviceText}</if>
+            <if test="isSee != null  and isSee != ''"> and is_see = #{isSee}</if>
+            <if test="electricalPicture != null  and electricalPicture != ''"> and electrical_picture = #{electricalPicture}</if>
+        </where>
+    </select>
+
+    <select id="selectDbReportDiagnosisElectricalById" parameterType="Long" resultMap="DbReportDiagnosisElectricalResult">
+        <include refid="selectDbReportDiagnosisElectricalVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDbReportDiagnosisElectrical" parameterType="DbReportDiagnosisElectrical" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into db_report_diagnosis_electrical
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician,</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''">signature_doctor,</if>
+            <if test="electricalNo != null  and electricalNo != ''">electrical_no,</if>
+            <if test="handedness != null  and handedness != ''">handedness,</if>
+            <if test="rhythmText != null  and rhythmText != ''">rhythm_text,</if>
+            <if test="slowWave != null  and slowWave != ''">slow_wave,</if>
+            <if test="dastWave != null  and dastWave != ''">dast_wave,</if>
+            <if test="pathologyWave != null  and pathologyWave != ''">pathology_wave,</if>
+            <if test="inducedExperimental != null  and inducedExperimental != ''">induced_experimental,</if>
+            <if test="clinicalSeizures != null  and clinicalSeizures != ''">clinical_seizures,</if>
+            <if test="noteText != null  and noteText != ''">note_text,</if>
+            <if test="resultsText != null  and resultsText != ''">results_text,</if>
+            <if test="adviceText != null  and adviceText != ''">advice_text,</if>
+            <if test="isSee != null  and isSee != ''">is_see,</if>
+            <if test="electricalPicture != null  and electricalPicture != ''">electrical_picture,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''">#{signatureTechnician},</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''">#{signatureDoctor},</if>
+            <if test="electricalNo != null  and electricalNo != ''">#{electricalNo},</if>
+            <if test="handedness != null  and handedness != ''">#{handedness},</if>
+            <if test="rhythmText != null  and rhythmText != ''">#{rhythmText},</if>
+            <if test="slowWave != null  and slowWave != ''">#{slowWave},</if>
+            <if test="dastWave != null  and dastWave != ''">#{dastWave},</if>
+            <if test="pathologyWave != null  and pathologyWave != ''">#{pathologyWave},</if>
+            <if test="inducedExperimental != null  and inducedExperimental != ''">#{inducedExperimental},</if>
+            <if test="clinicalSeizures != null  and clinicalSeizures != ''">#{clinicalSeizures},</if>
+            <if test="noteText != null  and noteText != ''">#{noteText},</if>
+            <if test="resultsText != null  and resultsText != ''">#{resultsText},</if>
+            <if test="adviceText != null  and adviceText != ''">#{adviceText},</if>
+            <if test="isSee != null  and isSee != ''">#{isSee},</if>
+            <if test="electricalPicture != null  and electricalPicture != ''">#{electricalPicture},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDbReportDiagnosisElectrical" parameterType="DbReportDiagnosisElectrical">
+        update db_report_diagnosis_electrical
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician = #{signatureTechnician},</if>
+            <if test="signatureDoctor != null  and signatureDoctor != ''">signature_doctor = #{signatureDoctor},</if>
+            <if test="electricalNo != null  and electricalNo != ''">electrical_no = #{electricalNo},</if>
+            <if test="handedness != null  and handedness != ''">handedness = #{handedness},</if>
+            <if test="rhythmText != null  and rhythmText != ''">rhythm_text = #{rhythmText},</if>
+            <if test="slowWave != null  and slowWave != ''">slow_wave = #{slowWave},</if>
+            <if test="dastWave != null  and dastWave != ''">dast_wave = #{dastWave},</if>
+            <if test="pathologyWave != null  and pathologyWave != ''">pathology_wave = #{pathologyWave},</if>
+            <if test="inducedExperimental != null  and inducedExperimental != ''">induced_experimental = #{inducedExperimental},</if>
+            <if test="clinicalSeizures != null  and clinicalSeizures != ''">clinical_seizures = #{clinicalSeizures},</if>
+            <if test="noteText != null  and noteText != ''">note_text = #{noteText},</if>
+            <if test="resultsText != null  and resultsText != ''">results_text = #{resultsText},</if>
+            <if test="adviceText != null  and adviceText != ''">advice_text = #{adviceText},</if>
+            <if test="isSee != null  and isSee != ''">is_see = #{isSee},</if>
+            <if test="electricalPicture != null  and electricalPicture != ''">electrical_picture = #{electricalPicture},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbReportDiagnosisElectricalById" parameterType="Long">
+        delete from db_report_diagnosis_electrical where id = #{id}
+    </delete>
+
+    <delete id="deleteDbReportDiagnosisElectricalByIds" parameterType="String">
+        delete from db_report_diagnosis_electrical where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

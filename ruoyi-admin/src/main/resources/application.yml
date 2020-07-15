@@ -128,3 +128,13 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+  #openOffice配置
+  jodconverter:
+    local:
+      enabled: true
+      max-tasks-per-process: 10
+      port-numbers: 9100
+      #home:安装地址
+      office-home: E:\openOffice2
+      #working-dir: E:\openOffice2\workingdir

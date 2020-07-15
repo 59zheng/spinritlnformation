@@ -29,10 +29,11 @@
         <result property="isAddDetection"    column="is_add_detection"    />
         <result property="dischargeTime"    column="discharge_time"    />
         <result property="archivesId"    column="archives_id"    />
+        <result property="taemId"    column="taem_id"    />
     </resultMap>
 
     <sql id="selectDbPatientMessageVo">
-        select id, patient_name, patient_sex, patient_age, patient_culture, patient_professional, patient_marriage, create_time, patient_birth, patient_height, patient_weight, hospital_id, is_hospital, outpatient_id, bed_id, diagnosis_cli, entrust_id, team_attending, patient_phone, patient_id_number, is_inquiry, is_add_detection, discharge_time, archives_id from db_patient_message
+        select id, patient_name, patient_sex, patient_age, patient_culture, patient_professional, patient_marriage, create_time, patient_birth, patient_height, patient_weight, hospital_id, is_hospital, outpatient_id, bed_id, diagnosis_cli, entrust_id, team_attending, patient_phone, patient_id_number, is_inquiry, is_add_detection, discharge_time, archives_id, taem_id from db_patient_message
     </sql>
 
     <select id="selectDbPatientMessageList" parameterType="DbPatientMessage" resultMap="DbPatientMessageResult">
@@ -60,6 +61,7 @@
             <if test="isAddDetection != null  and isAddDetection != ''"> and is_add_detection = #{isAddDetection}</if>
             <if test="dischargeTime != null "> and discharge_time = #{dischargeTime}</if>
             <if test="archivesId != null "> and archives_id = #{archivesId}</if>
+            <if test="taemId != null "> and taem_id = #{taemId}</if>
         </where>
     </select>
 
@@ -94,6 +96,7 @@
             <if test="isAddDetection != null  and isAddDetection != ''">is_add_detection,</if>
             <if test="dischargeTime != null ">discharge_time,</if>
             <if test="archivesId != null ">archives_id,</if>
+            <if test="taemId != null ">taem_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientName != null  and patientName != ''">#{patientName},</if>
@@ -119,6 +122,7 @@
             <if test="isAddDetection != null  and isAddDetection != ''">#{isAddDetection},</if>
             <if test="dischargeTime != null ">#{dischargeTime},</if>
             <if test="archivesId != null ">#{archivesId},</if>
+            <if test="taemId != null ">#{taemId},</if>
         </trim>
     </insert>
 
@@ -148,6 +152,7 @@
             <if test="isAddDetection != null  and isAddDetection != ''">is_add_detection = #{isAddDetection},</if>
             <if test="dischargeTime != null ">discharge_time = #{dischargeTime},</if>
             <if test="archivesId != null ">archives_id = #{archivesId},</if>
+            <if test="taemId != null ">taem_id = #{taemId},</if>
         </trim>
         where id = #{id}
     </update>

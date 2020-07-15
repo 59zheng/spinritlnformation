@@ -1,0 +1,61 @@
+package com.ruoyi.mind.physical.mapper;
+
+import java.util.List;
+import com.ruoyi.mind.physical.domain.DbReportDiagnosisElectrical;
+
+/**
+ * 脑电诊断Mapper接口
+ * 
+ * @author zheng
+ * @date 2020-07-01
+ */
+public interface DbReportDiagnosisElectricalMapper 
+{
+    /**
+     * 查询脑电诊断
+     * 
+     * @param id 脑电诊断ID
+     * @return 脑电诊断
+     */
+    public DbReportDiagnosisElectrical selectDbReportDiagnosisElectricalById(Long id);
+
+    /**
+     * 查询脑电诊断列表
+     * 
+     * @param dbReportDiagnosisElectrical 脑电诊断
+     * @return 脑电诊断集合
+     */
+    public List<DbReportDiagnosisElectrical> selectDbReportDiagnosisElectricalList(DbReportDiagnosisElectrical dbReportDiagnosisElectrical);
+
+    /**
+     * 新增脑电诊断
+     * 
+     * @param dbReportDiagnosisElectrical 脑电诊断
+     * @return 结果
+     */
+    public int insertDbReportDiagnosisElectrical(DbReportDiagnosisElectrical dbReportDiagnosisElectrical);
+
+    /**
+     * 修改脑电诊断
+     * 
+     * @param dbReportDiagnosisElectrical 脑电诊断
+     * @return 结果
+     */
+    public int updateDbReportDiagnosisElectrical(DbReportDiagnosisElectrical dbReportDiagnosisElectrical);
+
+    /**
+     * 删除脑电诊断
+     * 
+     * @param id 脑电诊断ID
+     * @return 结果
+     */
+    public int deleteDbReportDiagnosisElectricalById(Long id);
+
+    /**
+     * 批量删除脑电诊断
+     * 
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteDbReportDiagnosisElectricalByIds(String[] ids);
+}

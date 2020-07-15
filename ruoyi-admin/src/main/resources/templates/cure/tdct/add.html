@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增经颅直流电治疗')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-tdct-add">
+        <div class="form-group">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">导出文档上传</label>
+                <div class="col-sm-8">
+                    <input id="fileinput-demo-1" type="file" multiple>
+                </div>
+            </div>
+        </div>
+            <input name="documentAddress" id="documentAddress" class="form-control" type="text" style="display:none">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">父id：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input id="treeId" name="fatherId" type="hidden" th:value="${dbCureTdct?.id}"/>
+                        <input class="form-control" type="text" onclick="selectTdctTree()"
+                               id="treeName" readonly="true" th:value="${dbCureTdct?.patientName}">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "cure/tdct"
+    $("#form-tdct-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-tdct-add').serialize());
+        }
+    }
+
+    $("input[name='executionTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    /*经颅直流电治疗-新增-选择父部门树*/
+    function selectTdctTree() {
+        var options = {
+            title: '经颅直流电治疗选择',
+            width: "380",
+            url: prefix + "/selectTdctTree/" + $("#treeId").val(),
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+    $(document).ready(function () {
+
+        $("#fileinput-demo-1").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': '/common/uploadInput',
+            uploadExtraData: {
+                file: $("#fileinput-demo-1").val(),
+            },
+            initialPreviewAsData: true,
+            enctype: 'multipart/form-data',
+            uploadAsync: true,
+        });
+
+        $("#fileinput-demo-1").on("fileuploaded", function (event, data, previewId, index) {
+            var res = data.response;
+            if (res.code == 0) {
+                // location.href = res.url;
+                document.getElementById('documentAddress').value = res.fileName;
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

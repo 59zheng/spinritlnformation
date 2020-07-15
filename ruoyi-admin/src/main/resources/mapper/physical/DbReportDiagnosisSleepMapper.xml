@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mind.physical.mapper.DbReportDiagnosisSleepMapper">
+
+    <resultMap type="DbReportDiagnosisSleep" id="DbReportDiagnosisSleepResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="documentAddress"    column="document_address"    />
+        <result property="visitingStaff"    column="visiting_staff"    />
+        <result property="technicianName"    column="technician_name"    />
+        <result property="remainingDays"    column="remaining_days"    />
+        <result property="isOk"    column="is_ok"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="fatherId"    column="father_id"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectDbReportDiagnosisSleepVo">
+        select id, patient_id, create_time, document_address, visiting_staff, technician_name, remaining_days, is_ok, patient_name, father_id from db_report_diagnosis_sleep
+    </sql>
+
+    <select id="selectDbReportDiagnosisSleepList" parameterType="DbReportDiagnosisSleep" resultMap="DbReportDiagnosisSleepResult">
+        <include refid="selectDbReportDiagnosisSleepVo"/>
+        <where>
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="documentAddress != null  and documentAddress != ''"> and document_address = #{documentAddress}</if>
+            <if test="visitingStaff != null  and visitingStaff != ''"> and visiting_staff = #{visitingStaff}</if>
+            <if test="technicianName != null  and technicianName != ''"> and technician_name like concat('%', #{technicianName}, '%')</if>
+            <if test="remainingDays != null "> and remaining_days = #{remainingDays}</if>
+            <if test="isOk != null  and isOk != ''"> and is_ok = #{isOk}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="fatherId != null "> and father_id = #{fatherId}</if>
+        </where>
+        order by father_id
+    </select>
+
+    <select id="selectDbReportDiagnosisSleepById" parameterType="Long" resultMap="DbReportDiagnosisSleepResult">
+        select t.id, t.patient_id, t.create_time, t.document_address, t.visiting_staff, t.technician_name, t.remaining_days, t.is_ok, t.patient_name, t.father_id, p.patient_name as parent_name
+        from db_report_diagnosis_sleep t
+        left join db_report_diagnosis_sleep p on p.id = t.father_id
+        where t.id = #{id}
+    </select>
+
+    <insert id="insertDbReportDiagnosisSleep" parameterType="DbReportDiagnosisSleep" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into db_report_diagnosis_sleep
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">patient_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address,</if>
+            <if test="visitingStaff != null  and visitingStaff != ''">visiting_staff,</if>
+            <if test="technicianName != null  and technicianName != ''">technician_name,</if>
+            <if test="remainingDays != null ">remaining_days,</if>
+            <if test="isOk != null  and isOk != ''">is_ok,</if>
+            <if test="patientName != null  and patientName != ''">patient_name,</if>
+            <if test="fatherId != null ">father_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null ">#{patientId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="documentAddress != null  and documentAddress != ''">#{documentAddress},</if>
+            <if test="visitingStaff != null  and visitingStaff != ''">#{visitingStaff},</if>
+            <if test="technicianName != null  and technicianName != ''">#{technicianName},</if>
+            <if test="remainingDays != null ">#{remainingDays},</if>
+            <if test="isOk != null  and isOk != ''">#{isOk},</if>
+            <if test="patientName != null  and patientName != ''">#{patientName},</if>
+            <if test="fatherId != null ">#{fatherId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDbReportDiagnosisSleep" parameterType="DbReportDiagnosisSleep">
+        update db_report_diagnosis_sleep
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null ">patient_id = #{patientId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address = #{documentAddress},</if>
+            <if test="visitingStaff != null  and visitingStaff != ''">visiting_staff = #{visitingStaff},</if>
+            <if test="technicianName != null  and technicianName != ''">technician_name = #{technicianName},</if>
+            <if test="remainingDays != null ">remaining_days = #{remainingDays},</if>
+            <if test="isOk != null  and isOk != ''">is_ok = #{isOk},</if>
+            <if test="patientName != null  and patientName != ''">patient_name = #{patientName},</if>
+            <if test="fatherId != null ">father_id = #{fatherId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbReportDiagnosisSleepById" parameterType="Long">
+        delete from db_report_diagnosis_sleep where id = #{id}
+    </delete>
+
+    <delete id="deleteDbReportDiagnosisSleepByIds" parameterType="String">
+        delete from db_report_diagnosis_sleep where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 病人诊断记录(一次诊断记录)对象 db_patient_message
  *
  * @author zheng
- * @date 2020-06-23
+ * @date 2020-07-08
  */
 public class DbPatientMessage extends BaseEntity
 {
@@ -106,6 +106,10 @@ public class DbPatientMessage extends BaseEntity
     /** 关联档案id */
     @Excel(name = "关联档案id" )
     private Long archivesId;
+
+    /** 主治医生id */
+    @Excel(name = "主治医生id" )
+    private Long taemId;
 
     public void setId(Long id)
     {
@@ -314,6 +318,15 @@ public class DbPatientMessage extends BaseEntity
     {
         return archivesId;
     }
+    public void setTaemId(Long taemId)
+    {
+        this.taemId = taemId;
+    }
+
+    public Long getTaemId()
+    {
+        return taemId;
+    }
 
     @Override
     public String toString(){
@@ -342,6 +355,7 @@ public class DbPatientMessage extends BaseEntity
                 .append("isAddDetection" ,getIsAddDetection())
                 .append("dischargeTime" ,getDischargeTime())
                 .append("archivesId" ,getArchivesId())
+                .append("taemId" ,getTaemId())
                 .toString();
     }
 }

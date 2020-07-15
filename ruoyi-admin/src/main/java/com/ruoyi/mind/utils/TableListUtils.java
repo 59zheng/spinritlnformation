@@ -3,25 +3,21 @@ package com.ruoyi.mind.utils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.mind.registered.domain.DbPatientMessageVo2;
 import com.ruoyi.mind.registered.domain.DbPatientAssociated;
 import com.ruoyi.mind.registered.domain.DbPatientMessage;
 import com.ruoyi.mind.registered.domain.DbPatientMessageVo;
 import com.ruoyi.mind.registered.service.IDbPatientAssociatedService;
 import com.ruoyi.mind.registered.service.IDbPatientMessageService;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.springframework.context.ApplicationContext;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TableListUtils {
@@ -46,6 +42,39 @@ public class TableListUtils {
 
     /*
      *
+     * 列表查询  未诊断之前   治疗
+     * */
+    public static List<DbPatientMessageVo2> getListCurc(String name) {
+        List<DbPatientMessageVo2> list = new ArrayList<>();
+        DbPatientAssociated dbPatientAssociated = new DbPatientAssociated();
+        dbPatientAssociated.setIsOk("0");
+        dbPatientAssociated.setAssociatedTable(name);
+        List<DbPatientAssociated> dbPatientAssociateds = SpringUtils.getBean(IDbPatientAssociatedService.class).selectDbPatientAssociatedList(dbPatientAssociated);
+        for (DbPatientAssociated patientAssociated : dbPatientAssociateds) {
+            DbPatientMessageVo2 dbPatientMessageVo2 = new DbPatientMessageVo2();
+            DbPatientMessage dbPatientMessage = SpringUtils.getBean(IDbPatientMessageService.class).selectDbPatientMessageById(patientAssociated.getPatientId());
+            dbPatientMessageVo2.setDbPatientMessage(dbPatientMessage);
+            dbPatientMessageVo2.setDbPatientAssociated(patientAssociated);
+            list.add(dbPatientMessageVo2);
+        }
+        return list;
+    }
+
+    /*
+    *
+    * 根据档案id查询主治医生id
+    *
+    * */
+
+    public  static  Long getTeamId (long patientId){
+        DbPatientMessage dbPatientMessage = SpringUtils.getBean(IDbPatientMessageService.class).selectDbPatientMessageById(patientId);
+        return dbPatientMessage.getTaemId();
+    }
+
+
+
+    /*
+     *
      * 诊断完成添加诊断结果   修改结果
      * */
     public static int updateResult(Long id, String name, Long userId) {
@@ -58,6 +87,42 @@ public class TableListUtils {
             DbPatientAssociated dbPatientAssociated1 = dbPatientAssociateds.get(0);
             dbPatientAssociated1.setIsOk("1");
             dbPatientAssociated1.setAssociatedId(id);
+            int i = SpringUtils.getBean(IDbPatientAssociatedService.class).updateDbPatientAssociated(dbPatientAssociated1);
+            return i;
+        }
+        return 0;
+    }
+
+    /*
+    * 绑定表id
+    * */
+    public static int updateResultId(Long id, String name, Long userId) {
+        DbPatientAssociated dbPatientAssociated = new DbPatientAssociated();
+        dbPatientAssociated.setPatientId(userId);
+        dbPatientAssociated.setIsOk("0");
+        dbPatientAssociated.setAssociatedTable(name);
+        List<DbPatientAssociated> dbPatientAssociateds = SpringUtils.getBean(IDbPatientAssociatedService.class).selectDbPatientAssociatedList(dbPatientAssociated);
+        if (dbPatientAssociateds.size() > 0) {
+            DbPatientAssociated dbPatientAssociated1 = dbPatientAssociateds.get(0);
+            dbPatientAssociated1.setAssociatedId(id);
+            int i = SpringUtils.getBean(IDbPatientAssociatedService.class).updateDbPatientAssociated(dbPatientAssociated1);
+            return i;
+        }
+        return 0;
+    }
+
+    /*
+     * 确认完成
+     * */
+    public static int updateResultOk(Long id, String name, Long userId) {
+        DbPatientAssociated dbPatientAssociated = new DbPatientAssociated();
+        dbPatientAssociated.setPatientId(userId);
+        dbPatientAssociated.setIsOk("0");
+        dbPatientAssociated.setAssociatedTable(name);
+        List<DbPatientAssociated> dbPatientAssociateds = SpringUtils.getBean(IDbPatientAssociatedService.class).selectDbPatientAssociatedList(dbPatientAssociated);
+        if (dbPatientAssociateds.size() > 0) {
+            DbPatientAssociated dbPatientAssociated1 = dbPatientAssociateds.get(0);
+            dbPatientAssociated1.setIsOk("1");
             int i = SpringUtils.getBean(IDbPatientAssociatedService.class).updateDbPatientAssociated(dbPatientAssociated1);
             return i;
         }
@@ -80,6 +145,24 @@ public class TableListUtils {
             dbPatientMessageVo.setAssociatedId(patientAssociated.getAssociatedId());
             dbPatientMessageVo.setDbPatientMessage(SpringUtils.getBean(IDbPatientMessageService.class).selectDbPatientMessageById(patientAssociated.getPatientId()));
             list.add(dbPatientMessageVo);
+        }
+        return list;
+    }
+    /*
+     *
+     * 列表查询 诊断之后
+     * */
+    public static List<DbPatientMessageVo2> getLisOverCurc(String name) {
+        List<DbPatientMessageVo2> list = new ArrayList<>();
+        DbPatientAssociated dbPatientAssociated = new DbPatientAssociated();
+        dbPatientAssociated.setIsOk("1");
+        dbPatientAssociated.setAssociatedTable(name);
+        List<DbPatientAssociated> dbPatientAssociateds = SpringUtils.getBean(IDbPatientAssociatedService.class).selectDbPatientAssociatedList(dbPatientAssociated);
+        for (DbPatientAssociated patientAssociated : dbPatientAssociateds) {
+            DbPatientMessageVo2 DbPatientMessageVo2 = new DbPatientMessageVo2();
+            DbPatientMessageVo2.setDbPatientMessage(SpringUtils.getBean(IDbPatientMessageService.class).selectDbPatientMessageById(patientAssociated.getPatientId()));
+            DbPatientMessageVo2.setDbPatientAssociated(patientAssociated);
+            list.add(DbPatientMessageVo2);
         }
         return list;
     }
@@ -138,14 +221,63 @@ public class TableListUtils {
     }
 
     /*
-    * 路径拼接
+    * 路径拼接  完整路径
     * */
     public static String  getPath(String path) {
         String profile = Global.getProfile();
+        String replace = path.replace("/profile", profile);
+        return replace;
+    }
+    /*
+    *   存储地址
+    * */
+    public static String  getPathPage(String path) {
+        String profile = Global.getProfile();
 //        D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png
 //        /profile/upload/2020/06/24/747593fb4ef8643f2fc4ec776ba24e22.jpg
-        String replace = path.replace("/profile", "D:/ruoyi/uploadPath");
-        return replace;
+        String replace = path.replace("/profile", profile);
+        String[] strings = replace.split("/");
+        List<String> strings1 = Arrays.asList(strings);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < strings1.size()-1; i++) {
+            stringBuilder.append(strings1.get(i)+"/");
+        }
+        return stringBuilder.toString();
+    }
 
+
+    /*
+    *替换文件名
+    * */
+    public static String  getPathE(String path,String name) {
+        String[] split = path.split("/");
+        List<String> strings = Arrays.asList(split);
+        String s = strings.get((strings.size() - 1));
+        String replace = path.replace(s, name);
+        return replace;
+    }
+
+
+
+    /*
+    * 后缀
+    * */
+    public static String  getPathType(String path) {
+//        D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png
+//        /profile/upload/2020/06/24/747593fb4ef8643f2fc4ec776ba24e22.jpg
+        String[] strings = path.split("/");
+        List<String> strings1 = Arrays.asList(strings);
+        String s = strings1.get(strings1.size() - 1);
+        String[] split = s.split("\\.");
+        return split[1];
+    }
+
+    public static String toPath(String s) {
+
+        String profile = Global.getProfile();
+//        D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png
+//        /profile/upload/2020/06/24/747593fb4ef8643f2fc4ec776ba24e22.jpg
+        String replace = s.replace(profile, "/profile");
+        return  replace;
     }
 }

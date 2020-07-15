@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('左右互选组件')"/>
+    <th:block th:include="include :: bootstrap-duallistbox-css"/>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                </div>
+                <div class="ibox-content">
+                    <form id="form" action="#" class="wizard-big">
+                        <select class="form-control dual_select" multiple id="drkj">
+                        </select>
+                    </form>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-duallistbox-js"/>
+<script type="text/javascript" th:inline="javascript">
+
+
+    /*
+    * 初始化选项
+    * */
+    window.onload = function opnenONE() {
+
+        var list = [[${list}]];
+        var a = JSON.parse(list);
+        var list2 = [[${list2}]];
+        var a2 = JSON.parse(list2);
+
+         console.log(a);
+         console.log(a2);
+        var drkjSelect = $('#drkj');//选择多选框的ID
+        for (var i = 0; i < a.length; i++) {  //循环LIST
+            var veh = a[i];//获取LIST里面的对象
+
+            drkjSelect.append('"<option value=' + veh.id + '>'+ veh.groupName+ '</option>"');
+        }
+
+        // <option selected value="5">若依5</option>
+        for (var j = 0; j < a2.length; j++) {  //循环LIST
+            var veh2 = a2[j];//获取LIST里面的对象
+
+             drkjSelect.append('"<option selected  value=' + veh2.id + '>' + veh2.groupName + '</option>"');
+        }
+
+
+        //创建双选对象，一定要在这里初始化，要不然AJAX请求赋值的数据还没有加载到双选框内
+        $('.dual_select').bootstrapDualListbox({
+            nonSelectedListLabel: '未选择的病理研究组',
+            selectedListLabel: '已选择病理研究组',
+            filterPlaceHolder: '输入病理研究组',
+            selectorMinimalHeight: 160,
+            moveOnSelect: false,           // 出现一个剪头，表示可以一次选择一个
+            infoText: '共{0}个病理研究组',
+            infoTextFiltered: '搜索到{0}个病理研究组 ,共{1}个病理研究组',
+            infoTextEmpty: '列表为空',
+        });
+
+
+    };
+
+    /*
+    * 表单提交
+    * */
+    function submitHandler() {
+        if ($.validate.form()) {
+            //这里的ID是右边那个select框的ID，这是默认ID
+            var userId = [[${userId}]];
+            var isselected = $("#bootstrap-duallistbox-selected-list_ option").map(function () {
+                return $(this).val();
+            }).get().join(",");
+            //获取的值是每个option的val加，加val
+            var prefix = ctx + "registered/message1";
+            var url = prefix + '/groupSave?ids=' + isselected + "&userId=" + userId;
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (result) {
+                    $.modal.close();
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>

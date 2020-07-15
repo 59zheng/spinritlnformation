@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.media.js}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var signatureDoctor = "[[${path}]]";
+            var a1 = document.getElementById("a1");
+            a1.setAttribute("href",signatureDoctor);
+            $('a.media').media({width:800, height:1000});
+
+        });
+    </script>
+
+
+</head>
+<body >
+<div class="panel-body">
+
+    <a class="media" id="a1" href=""></a>
+</div>
+
+
+
+
+
+</body>
+</html>
