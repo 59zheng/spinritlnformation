@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/themes/grid-light.js"></script>
+</head>
+<body>
+<div id="container" style="min-width:400px;height:400px;position: relative"></div>
+<th:block th:include="include :: footer"/>
+<script>
+    // JS 代码
+    var endDate =" [[${endDate}]]";
+
+    var strs= [];
+    strs=endDate.split(",");
+    var endDateYear = strs[0];
+    var endDateMonter = strs[1];
+    var endDateday = strs[2];
+    console.log(endDateYear,endDateMonter,endDateday);
+
+    var startDate = "[[${startDate}]]";
+
+    var strs1= [];
+    strs1=startDate.split(",");
+    var startYear = strs1[0];
+    var startMonter = strs1[1];
+    var startday = strs1[2];
+    console.log(startDate);
+
+
+    var data = [[${data}]],
+
+        detailChart, //
+        container = document.getElementById('container'),
+        detailContainer = null,
+        masterContainer = null;
+    console.log(data);
+
+    // 创建详细数据图
+    function createDetail(masterChart) {
+        console.log(endDateYear,endDateMonter,endDateday);
+        var detailData = [],
+            //默认显示的开始时间 月份加1
+            detailStart = Date.UTC( startYear,startMonter,startday);
+        Highcharts.each(masterChart.series[0].data, function (d) {
+            if (d.x >= detailStart) {
+                detailData.push(d.y);
+            }
+        });
+        detailChart = Highcharts.chart(detailContainer, {
+            chart: {
+                marginBottom: 120,
+                reflow: false,
+                marginLeft: 50,
+                marginRight: 20,
+                style: {
+                    position: 'absolute'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: '每日就诊人数走势图'
+            },
+            subtitle: {
+                text: '通过拖动下方图表选择区域'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: null
+                },
+                maxZoom: 0.1
+            },
+            tooltip: {
+                formatter: function () {
+                    var point = this.points[0];
+                    //鼠标移上去的事件
+                    return '<b>' + point.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>'
+                        ;
+                },
+                shared: true
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    marker: {
+                        enabled: false,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                radius: 3
+                            }
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: '就诊人数',
+                pointStart: detailStart,
+                pointInterval: 24 * 3600 * 1000,
+                data: detailData
+            }],
+        });
+    }
+
+    // 创建导航图
+    function createMaster() {
+        return Highcharts.chart(masterContainer, {
+            chart: {
+                reflow: false,
+                borderWidth: 0,
+                backgroundColor: null,
+                marginLeft: 50,
+                marginRight: 20,
+                zoomType: 'x',
+                events: {
+                    // listen to the selection event on the master chart to update the
+                    // extremes of the detail chart
+                    selection: function (event) {
+                        var extremesObject = event.xAxis[0],
+                            min = extremesObject.min,
+                            max = extremesObject.max,
+                            detailData = [],
+                            xAxis = this.xAxis[0];
+                        Highcharts.each(this.series[0].data, function (d) {
+                            if (d.x > min && d.x < max) {
+                                detailData.push([d.x, d.y]);
+                            }
+                        });
+                        // move the plot bands to reflect the new detail span
+                        xAxis.removePlotBand('mask-before');
+                        xAxis.addPlotBand({
+                            id: 'mask-before',
+                            //起始时间
+                            from: Date.UTC( startYear,startMonter,startday),
+                            to: min,
+                            color: 'rgba(0, 0, 0, 0.2)'
+                        });
+                        xAxis.removePlotBand('mask-after');
+                        xAxis.addPlotBand({
+                            id: 'mask-after',
+                            from: max,
+                            //中止时间
+                            to: Date.UTC(endDateYear,endDateMonter,endDateday),
+                            color: 'rgba(0, 0, 0, 0.2)'
+                        });
+
+                        detailChart.series[0].setData(detailData);
+                        return false;
+                    }
+                }
+            },
+            title: {
+                text: null
+            },
+            xAxis: {
+                type: 'datetime',
+                showLastTickLabel: true,
+                maxZoom: 14 * 24 * 3600000, // fourteen days
+                plotBands: [{
+                    id: 'mask-before',
+                    //阴影的长度   除了默认显示的其他时间段
+                    from: Date.UTC( startYear,startMonter,startday),
+                    to: Date.UTC(endDateYear,endDateMonter,endDateday),
+                    color: 'rgba(0, 0, 0, 0.2)'
+                }],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                gridLineWidth: 0,
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                min: 0.6,
+                showFirstLabel: false
+            },
+            tooltip: {
+                formatter: function () {
+                    return false;
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    fillColor: {
+                        linearGradient: [0, 0, 0, 70],
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, 'rgba(255,255,255,0)']
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                type: 'area',
+                name: 'USD to EUR',
+                pointInterval: 24 * 3600 * 1000,
+                //起始时间
+                pointStart: Date.UTC( startYear,startMonter,startday),
+                //数据，每天对应一个数值
+                data: data
+            }],
+            exporting: {
+                enabled: false
+            }
+        }, function (masterChart) {
+            createDetail(masterChart);
+        });
+    }
+
+    /*
+     * 创建 detailContainer 并 append 到 container 中
+     */
+    detailContainer = document.createElement('div');
+    container.appendChild(detailContainer);
+    /*
+     * 创建 masterContainer 并 append 到 container 中
+     */
+    masterContainer = document.createElement('div');
+    masterContainer.style.position = 'absolute';
+    masterContainer.style.top = '300px';
+    masterContainer.style.height = '100px';
+    masterContainer.style.width = '100%';
+    container.appendChild(masterContainer);
+    /*
+     * 开始创建导航图，详细的图是在导航图的回调函数中创建的
+     * 代码入口
+     */
+    createMaster();
+
+</script>
+</body>
+</html>

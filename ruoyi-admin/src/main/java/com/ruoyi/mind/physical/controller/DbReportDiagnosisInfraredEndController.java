@@ -11,10 +11,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.mind.physical.domain.DbReportDiagnosisInduced;
 import com.ruoyi.mind.physical.domain.DbReportDiagnosisInfrared;
 import com.ruoyi.mind.physical.service.IDbReportDiagnosisInfraredService;
-import com.ruoyi.mind.registered.domain.DbPatientMessage;
 import com.ruoyi.mind.registered.domain.DbPatientMessageVo;
 import com.ruoyi.mind.utils.TableListUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -23,17 +21,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -126,10 +121,10 @@ public class DbReportDiagnosisInfraredEndController extends BaseController
      * 修改红外热成像及血流图检查
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
+    public String edit(@PathVariable("id") Long id, ModelMap map)
     {
         DbReportDiagnosisInfrared dbReportDiagnosisInfrared = dbReportDiagnosisInfraredService.selectDbReportDiagnosisInfraredById(id);
-        mmap.put("dbReportDiagnosisInfrared", dbReportDiagnosisInfrared);
+        map.put("dbReportDiagnosisInfrared", dbReportDiagnosisInfrared);
         return prefix + "/edit";
     }
 
@@ -163,7 +158,7 @@ public class DbReportDiagnosisInfraredEndController extends BaseController
 
         DbReportDiagnosisInfrared dbReportDiagnosisInfrared = dbReportDiagnosisInfraredService.selectDbReportDiagnosisInfraredById(id);
         Long patientId = dbReportDiagnosisInfrared.getPatientId();
-        dbReportDiagnosisInfrared.setDescribe(dbReportDiagnosisInfrared.getDescribe().replaceAll("\\s*",""));
+        dbReportDiagnosisInfrared.setDescribeText(dbReportDiagnosisInfrared.getDescribeText().replaceAll("\\s*",""));
         Map<String, Object> stringObjectMap1 = TableListUtils.patientToMap(patientId);
         stringObjectMap1.put("createTime", DateUtils.getDate());
         Map<String, Object> stringObjectMap = TableListUtils.objectToMap(dbReportDiagnosisInfrared);
@@ -172,41 +167,44 @@ public class DbReportDiagnosisInfraredEndController extends BaseController
         /*
          * 图片路径处理
          * */
-        Resource resource2 = new ClassPathResource("/doc/infrared.docx");
+/*        Resource resource2 = new ClassPathResource("/infrared.docx");
         String absolutePath = resource2.getFile().getAbsolutePath();
 
-        String modelName =absolutePath;
 
+        String modelName =absolutePath;*/
+        File instream = ResourceUtils.getFile("classpath:infrared.docx");
 
         ReplaceOptionalTextPictureRefRenderPolicy pictureReplace5 = TableListUtils.getPictureReplace("signatureTechnician", (String) stringObjectMap.get("signatureTechnician"));
         ReplaceOptionalTextPictureRefRenderPolicy pictureReplace6 = TableListUtils.getPictureReplace("pictureCnv", (String) stringObjectMap.get("pictureCnv"));
-
-
         ConfigureBuilder configureBuilder = Configure.newBuilder();
         configureBuilder.referencePolicy(pictureReplace5);
         configureBuilder.referencePolicy(pictureReplace6);
         Configure configure3 =configureBuilder.build();
-
-
-        XWPFTemplate template = XWPFTemplate.compile( modelName, configure3)
+        XWPFTemplate template = XWPFTemplate.compile( instream, configure3)
                 .render(stringObjectMap1);
 
-        response.setContentType("application/octet-stream");
+        // 清空response
+        response.reset();
+//        response.setContentType("application/octet-stream");
         String patientName = (String) stringObjectMap1.get("patientName");
-        String name="近红外结果报告"+"("+patientName+")"+".docx";
-        String s = new String(name.getBytes(), "iso-8859-1");
-
-        response.setHeader("Content-disposition", "attachment;filename=\"" + s + "\"");
+        String name = "近红外结果报告" + "(" + patientName + ")" + ".docx";
 
         try {
             // HttpServletResponse response
-            ServletOutputStream out = response.getOutputStream();
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"" + new String(name.getBytes("gbk"),"iso8859-1")+ ".doc" + "\"");
+
+// HttpServletResponse response
+            OutputStream out = response.getOutputStream();
             BufferedOutputStream bos = new BufferedOutputStream(out);
             template.write(bos);
             template.close();
+            bos.flush();
+            bos.close();
             out.flush();
             out.close();
-            template.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

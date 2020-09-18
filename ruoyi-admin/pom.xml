@@ -84,8 +84,44 @@
             <artifactId>spring-test</artifactId>
             <version>5.2.0.RELEASE</version>
         </dependency>
+        <!--openoffice-->
+<!--        &lt;!&#45;&#45;jodconverter 核心包&#45;&#45;&gt;
+        &lt;!&#45;&#45; https://mvnrepository.com/artifact/org.jodconverter/jodconverter-core &#45;&#45;&gt;-->
+        <dependency>
+            <groupId>org.jodconverter</groupId>
+            <artifactId>jodconverter-core</artifactId>
+        </dependency>
+        <!-- &lt;!&#45;&#45;springboot支持包，里面包括了自动配置类&#45;&#45;&gt;
+         &lt;!&#45;&#45; https://mvnrepository.com/artifact/org.jodconverter/jodconverter-spring-boot-starter &#45;&#45;&gt;-->
+        <dependency>
+            <groupId>org.jodconverter</groupId>
+            <artifactId>jodconverter-spring-boot-starter</artifactId>
+        </dependency>
 
-        <!-- fastdfs所需jar包依赖[注：这里是在本地lib中引入，maven中央仓库中暂无此jar包]，要与<includeSystemScope>true</includeSystemScope>配合使用-->
+        <!--     &lt;!&#45;&#45;jodconverter 本地支持包  &#45;&#45;&gt;
+             &lt;!&#45;&#45; https://mvnrepository.com/artifact/org.jodconverter/jodconverter-local &#45;&#45;&gt;-->
+        <dependency>
+            <groupId>org.jodconverter</groupId>
+            <artifactId>jodconverter-local</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.artofsolving</groupId>
+            <artifactId>jodconverter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+
+        <!-- openOffice end-->
+
+
+        <!-- fastdfs所需jar包依赖[注：这里是在本地lib中引入，
+        maven中央仓库中暂无此jar包]，要与<includeSystemScope>true</includeSystemScope>配合使用-->
         <dependency>
             <groupId>com.zhengqing</groupId>
             <artifactId>fastdfs-client-java</artifactId>
@@ -94,6 +130,29 @@
             <systemPath>${project.basedir}/src/main/resources/jar/ooxml-schemas-1.1.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.28</version>
+        </dependency>
+<!--阿里云短信服务-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.3</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>5.1.9.RELEASE</version>
+        </dependency>
 
 
     </dependencies>
@@ -106,6 +165,7 @@
 				<version>2.1.1.RELEASE</version>
                 <configuration>
 					<fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                    <includeSystemScope>true</includeSystemScope>
 				</configuration>
                 <executions>
                     <execution>
@@ -115,6 +175,17 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.6</version>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>docx</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
             <plugin>   
                 <groupId>org.apache.maven.plugins</groupId>   
                 <artifactId>maven-war-plugin</artifactId>   
@@ -122,7 +193,18 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${project.artifactId}</warName>
-                </configuration>   
+                    <webResources>
+                        <resource>
+                            <directory>${project.basedir}/lib</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                            <filtering>false</filtering>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+
 		   </plugin>   
         </plugins>
         <finalName>${project.artifactId}</finalName>

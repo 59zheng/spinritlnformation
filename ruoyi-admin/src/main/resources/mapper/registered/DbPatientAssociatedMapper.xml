@@ -79,5 +79,14 @@
             #{id}
         </foreach>
     </delete>
+    <select id="selectDbDiagonsisProjectListBycreateTime" parameterType="long"
+            resultMap="DbPatientAssociatedResult">
+        <include refid="selectDbPatientAssociatedVo"/>
+        <where>
+
+            and patient_id = #{patientId} and is_ok = "1"
+        </where>
+        order by create_time
+    </select>
 
 </mapper>

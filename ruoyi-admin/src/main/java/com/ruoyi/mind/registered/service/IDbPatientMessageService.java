@@ -1,6 +1,9 @@
 package com.ruoyi.mind.registered.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.mind.registered.domain.DbPatientMessage;
 
 /**
@@ -58,4 +61,6 @@ public interface IDbPatientMessageService
      * @return 结果
      */
     public int deleteDbPatientMessageById(Long id);
+
+    List<Map<String,Object>> selectListByCreatTime();
 }

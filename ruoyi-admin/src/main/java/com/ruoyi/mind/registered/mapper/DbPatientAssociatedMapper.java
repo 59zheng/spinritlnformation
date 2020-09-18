@@ -1,7 +1,10 @@
 package com.ruoyi.mind.registered.mapper;
 
 import java.util.List;
+
+import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
 import com.ruoyi.mind.registered.domain.DbPatientAssociated;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 病人诊断记录关联检测报告Mapper接口
@@ -58,4 +61,6 @@ public interface DbPatientAssociatedMapper
      * @return 结果
      */
     public int deleteDbPatientAssociatedByIds(String[] ids);
+
+    List<DbPatientAssociated> selectDbDiagonsisProjectListBycreateTime(Long patientId);
 }

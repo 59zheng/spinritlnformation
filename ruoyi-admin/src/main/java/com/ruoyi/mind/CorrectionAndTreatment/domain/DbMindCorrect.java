@@ -1,6 +1,7 @@
 package com.ruoyi.mind.CorrectionAndTreatment.domain;
 
 import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -12,139 +13,146 @@ import com.ruoyi.common.core.domain.TreeEntity;
  * @author zheng
  * @date 2020-07-15
  */
-public class DbMindCorrect extends TreeEntity
-        {
-private static final long serialVersionUID=1L;
+public class DbMindCorrect extends TreeEntity {
+    private static final long serialVersionUID = 1L;
 
-        /** 主键 */
-            private Long id;
+    /**
+     * 主键
+     */
+    private Long id;
 
-            /** 病人名称 */
-                                                        @Excel(name = "病人名称" )
-                        private String patientName;
+    /**
+     * 病人名称
+     */
+    @Excel(name = "病人名称")
+    private String patientName;
 
-            /** 主治医生 */
-                                                        @Excel(name = "主治医生" )
-                        private String attendingPhysician;
+    /**
+     * 主治医生
+     */
+    @Excel(name = "主治医生")
+    private String attendingPhysician;
 
-            /** 执行技师 */
-                                                        @Excel(name = "执行技师" )
-                        private String technicianName;
+    /**
+     * 执行技师
+     */
+    @Excel(name = "执行技师")
+    private String technicianName;
 
-            /** 执行时间 */
-                                                        @Excel(name = "执行时间" , width = 30, dateFormat = "yyyy-MM-dd" )
-                        private Date executionTime;
+    /**
+     * 执行时间
+     */
+    @Excel(name = "执行时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date executionTime;
 
-            /** 剩余次数 */
-                                                        @Excel(name = "剩余次数" )
-                        private Long howMany;
+    /**
+     * 剩余次数
+     */
+    @Excel(name = "剩余次数")
+    private Long howMany;
 
-            /** 文档地址 */
-                                                        @Excel(name = "文档地址" )
-                        private String documentAddress;
+    /**
+     * 文档地址
+     */
+    @Excel(name = "文档地址")
+    private String documentAddress;
 
-            /** 父id */
-                                                        @Excel(name = "父id" )
-                        private Long fatherId;
+    /**
+     * 父id
+     */
+    @Excel(name = "父id")
+    private Long fatherId;
 
-            /** 诊断记录id */
-                                                        @Excel(name = "诊断记录id" )
-                        private Long patientId;
+    /**
+     * 诊断记录id
+     */
+    @Excel(name = "诊断记录id")
+    private Long patientId;
 
-                            public void setId(Long id)
-            {
-            this.id = id;
-            }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getId()
-            {
-            return id;
-            }
-                            public void setPatientName(String patientName)
-            {
-            this.patientName = patientName;
-            }
+    public Long getId() {
+        return id;
+    }
 
-    public String getPatientName()
-            {
-            return patientName;
-            }
-                            public void setAttendingPhysician(String attendingPhysician)
-            {
-            this.attendingPhysician = attendingPhysician;
-            }
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
 
-    public String getAttendingPhysician()
-            {
-            return attendingPhysician;
-            }
-                            public void setTechnicianName(String technicianName)
-            {
-            this.technicianName = technicianName;
-            }
+    public String getPatientName() {
+        return patientName;
+    }
 
-    public String getTechnicianName()
-            {
-            return technicianName;
-            }
-                            public void setExecutionTime(Date executionTime)
-            {
-            this.executionTime = executionTime;
-            }
+    public void setAttendingPhysician(String attendingPhysician) {
+        this.attendingPhysician = attendingPhysician;
+    }
 
-    public Date getExecutionTime()
-            {
-            return executionTime;
-            }
-                            public void setHowMany(Long howMany)
-            {
-            this.howMany = howMany;
-            }
+    public String getAttendingPhysician() {
+        return attendingPhysician;
+    }
 
-    public Long getHowMany()
-            {
-            return howMany;
-            }
-                            public void setDocumentAddress(String documentAddress)
-            {
-            this.documentAddress = documentAddress;
-            }
+    public void setTechnicianName(String technicianName) {
+        this.technicianName = technicianName;
+    }
 
-    public String getDocumentAddress()
-            {
-            return documentAddress;
-            }
-                            public void setFatherId(Long fatherId)
-            {
-            this.fatherId = fatherId;
-            }
+    public String getTechnicianName() {
+        return technicianName;
+    }
 
-    public Long getFatherId()
-            {
-            return fatherId;
-            }
-                            public void setPatientId(Long patientId)
-            {
-            this.patientId = patientId;
-            }
+    public void setExecutionTime(Date executionTime) {
+        this.executionTime = executionTime;
+    }
 
-    public Long getPatientId()
-            {
-            return patientId;
-            }
-    
-@Override
-public String toString(){
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                                .append("id" ,getId())
-                                .append("patientName" ,getPatientName())
-                                .append("attendingPhysician" ,getAttendingPhysician())
-                                .append("technicianName" ,getTechnicianName())
-                                .append("executionTime" ,getExecutionTime())
-                                .append("howMany" ,getHowMany())
-                                .append("documentAddress" ,getDocumentAddress())
-                                .append("fatherId" ,getFatherId())
-                                .append("patientId" ,getPatientId())
-            .toString();
-        }
-        }
+    public Date getExecutionTime() {
+        return executionTime;
+    }
+
+    public void setHowMany(Long howMany) {
+        this.howMany = howMany;
+    }
+
+    public Long getHowMany() {
+        return howMany;
+    }
+
+    public void setDocumentAddress(String documentAddress) {
+        this.documentAddress = documentAddress;
+    }
+
+    public String getDocumentAddress() {
+        return documentAddress;
+    }
+
+    public void setFatherId(Long fatherId) {
+        this.fatherId = fatherId;
+    }
+
+    public Long getFatherId() {
+        return fatherId;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("patientName", getPatientName())
+                .append("attendingPhysician", getAttendingPhysician())
+                .append("technicianName", getTechnicianName())
+                .append("executionTime", getExecutionTime())
+                .append("howMany", getHowMany())
+                .append("documentAddress", getDocumentAddress())
+                .append("fatherId", getFatherId())
+                .append("patientId", getPatientId())
+                .toString();
+    }
+}

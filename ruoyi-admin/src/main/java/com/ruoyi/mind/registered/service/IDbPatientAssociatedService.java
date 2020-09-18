@@ -1,6 +1,8 @@
 package com.ruoyi.mind.registered.service;
 
 import java.util.List;
+
+import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
 import com.ruoyi.mind.registered.domain.DbPatientAssociated;
 
 /**
@@ -58,4 +60,6 @@ public interface IDbPatientAssociatedService
      * @return 结果
      */
     public int deleteDbPatientAssociatedById(Long id);
+
+    List<DbPatientAssociated> selectDbDiagonsisProjectListBycreateTime(DbPatientAssociated dbDiagonsisProject);
 }

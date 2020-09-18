@@ -1,6 +1,19 @@
 package com.ruoyi.mind.CorrectionAndTreatment.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.mind.cure.domain.DbCureDbs;
+import com.ruoyi.mind.registered.domain.DbPatientMessageVo2;
+import com.ruoyi.mind.utils.Doc2HtmlUtil;
+import com.ruoyi.mind.utils.TableListUtils;
+import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.service.ISysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +48,9 @@ public class DbMindCorrectController extends BaseController
     @Autowired
     private IDbMindCorrectService dbMindCorrectService;
 
+    @Autowired
+    private ISysUserService sysUserService;
+
     @RequiresPermissions("CorrectionAndTreatment:correct:view")
     @GetMapping()
     public String correct()
@@ -50,7 +66,58 @@ public class DbMindCorrectController extends BaseController
     @ResponseBody
     public List<DbMindCorrect> list(DbMindCorrect dbMindCorrect)
     {
-        List<DbMindCorrect> list = dbMindCorrectService.selectDbMindCorrectList(dbMindCorrect);
+        /*
+         *     *查询符合条件的需要治疗的病人
+         *     *是否已拥有父级id
+         *     *返回列表
+         *
+         * */
+        List<DbPatientMessageVo2> tms = TableListUtils.getListCurc("correct");
+        List<DbMindCorrect> list = new ArrayList<>();
+        tms.forEach(item -> {
+//            判断是否完成
+            if (item.getDbPatientAssociated().getAssociatedId() != null) {
+//                  绑定过
+                DbMindCorrect dbMindCorrect1 = dbMindCorrectService.selectDbMindCorrectById(item.getDbPatientAssociated().getAssociatedId());
+//                是否完成
+                if (dbMindCorrect1.getHowMany() == 0) {
+//                    已完成
+                    TableListUtils.updateResultOk(item.getDbPatientAssociated().getAssociatedId(), "DBS", item.getDbPatientAssociated().getPatientId());
+
+                }else {
+                    DbMindCorrect dbCureTms3 = new DbMindCorrect();
+                    dbCureTms3.setFatherId(item.getDbPatientAssociated().getAssociatedId());
+
+                    List<DbMindCorrect> dbMindCorrects = dbMindCorrectService.selectDbMindCorrectList(dbCureTms3);
+                    list.add(dbMindCorrect1);
+                    list.addAll(dbMindCorrects);
+                }
+
+            } else {
+                DbMindCorrect dbCureTms1 = new DbMindCorrect();
+                Long id = item.getDbPatientMessage().getId();
+                dbCureTms1.setPatientId(id);
+                dbCureTms1.setFatherId(0L);
+
+                dbCureTms1.setPatientName(item.getDbPatientMessage().getPatientName());
+//            主治医生
+                SysUser sysUser1 = sysUserService.selectUserById(item.getDbPatientMessage().getTaemId());
+                dbCureTms1.setAttendingPhysician(sysUser1.getUserName());
+/*//            技师名称
+            dbCureTms1.setTechnicianName(ShiroUtils.getSysUser().getUserName());*/
+//          数量
+                dbCureTms1.setHowMany(item.getDbPatientAssociated().getTreatmentNum());
+                List<DbMindCorrect> dbMindCorrects = dbMindCorrectService.selectDbMindCorrectList(dbCureTms1);
+                if (dbMindCorrects == null || dbMindCorrects.size() == 0) {
+                    dbCureTms1.setExecutionTime(new Date());
+                    dbMindCorrectService.insertDbMindCorrect(dbCureTms1);
+                    list.add(dbCureTms1);
+                }else {
+                    list.addAll(dbMindCorrects);
+                }
+            }
+
+        });
         return list;
     }
 
@@ -90,7 +157,26 @@ public class DbMindCorrectController extends BaseController
     @ResponseBody
     public AjaxResult addSave(DbMindCorrect dbMindCorrect)
     {
-        return toAjax(dbMindCorrectService.insertDbMindCorrect(dbMindCorrect));
+        Long fatherId = dbMindCorrect.getFatherId();
+        DbMindCorrect dbMindCorrect1 = dbMindCorrectService.selectDbMindCorrectById(fatherId);
+        /*
+         * 修改父的剩余次数
+         * */
+        dbMindCorrect1.setHowMany(dbMindCorrect.getHowMany() - 1);
+        int i = dbMindCorrectService.updateDbMindCorrect(dbMindCorrect1);
+        dbMindCorrect1.setId(null);
+        dbMindCorrect1.setPatientName(null);
+        dbMindCorrect1.setTechnicianName(ShiroUtils.getSysUser().getUserName());
+        dbMindCorrect1.setExecutionTime(new Date());
+        dbMindCorrect1.setDocumentAddress(dbMindCorrect.getDocumentAddress());
+        dbMindCorrect1.setFatherId(dbMindCorrect.getFatherId());
+        dbMindCorrect1.setHowMany(null);
+        int i1 = dbMindCorrectService.insertDbMindCorrect(dbMindCorrect1);
+        /*
+         * 修改id
+         * */
+        int tms = TableListUtils.updateResultId(fatherId, "correct", dbMindCorrect1.getPatientId());
+        return toAjax(tms);
     }
 
     /**
@@ -150,5 +236,28 @@ public class DbMindCorrectController extends BaseController
     {
         List<Ztree> ztrees = dbMindCorrectService.selectDbMindCorrectTree();
         return ztrees;
+    }
+    /*
+     * 查看预览
+     * */
+    @GetMapping("/preview/{userId}")
+    public String preview(@PathVariable("userId") Long userId, ModelMap mmap) throws IOException {
+        DbMindCorrect dbMindCorrect = dbMindCorrectService.selectDbMindCorrectById(userId);
+        String documentAddress = dbMindCorrect.getDocumentAddress();
+        String path = TableListUtils.getPath(documentAddress);
+        Doc2HtmlUtil coc2HtmlUtil = Doc2HtmlUtil.getDoc2HtmlUtilInstance();
+        File file = null;
+        FileInputStream fileInputStream = null;
+
+        file = new File(path);
+        fileInputStream = new FileInputStream(file);
+        String pathPage = TableListUtils.getPathPage(documentAddress);
+        String PathType = TableListUtils.getPathType(documentAddress);
+        String s = coc2HtmlUtil.file2pdf(fileInputStream, pathPage, PathType);
+//        返回生成pdf路径  转化为服务器路径
+
+        String replace = TableListUtils.getPathE(documentAddress,s);
+        mmap.put("path",replace);
+        return  "common/teamLook";
     }
 }

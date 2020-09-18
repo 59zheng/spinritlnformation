@@ -7,13 +7,9 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
-import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.mind.diagnosis.service.IDbDiagonsisProjectService;
-import com.ruoyi.mind.registered.domain.DbPatientAssociated;
+import com.ruoyi.mind.physical.utils.InducedUtils;
 import com.ruoyi.mind.registered.domain.DbPatientMessage;
-import com.ruoyi.mind.registered.service.IDbPatientAssociatedService;
-import com.ruoyi.mind.registered.service.IDbPatientMessageService;
 import com.ruoyi.mind.utils.TableListUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
@@ -39,8 +35,6 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static java.lang.System.out;
 
 /**
  * 脑电报告(物理诊断下边)Controller
@@ -135,10 +129,15 @@ public class DbReportDiagnosisInducedController extends BaseController {
 //        医生签名
         SysUser sysUser1 = sysUserService.selectUserById(TableListUtils.getTeamId(dbReportDiagnosisInduced.getPatientId()));
         dbReportDiagnosisInduced.setSignatureDoctor(sysUser1.getSignatureURL());
-        int i = dbReportDiagnosisInducedService.insertDbReportDiagnosisInduced(dbReportDiagnosisInduced);
+        /*
+        * 结论处理
+        * */
+        InducedUtils inducedUtils = new InducedUtils();
+        DbReportDiagnosisInduced clusion = inducedUtils.getClusion(dbReportDiagnosisInduced);
+        int i = dbReportDiagnosisInducedService.insertDbReportDiagnosisInduced(clusion);
 
-        Long id = dbReportDiagnosisInduced.getId();
-        Long patientId = dbReportDiagnosisInduced.getPatientId();
+        Long id = clusion.getId();
+        Long patientId = clusion.getPatientId();
         int induced = TableListUtils.updateResult(id, "induced", patientId);
         return toAjax(induced);
     }
@@ -188,7 +187,7 @@ public class DbReportDiagnosisInducedController extends BaseController {
     public void generateWord(String data, HttpServletRequest request, HttpServletResponse response) throws IOException {
         //图片路径，请注意你是linux还是windows
         String wordPath = "C:\\Users\\Administrator\\Desktop\\";
-        String modelName = "induced.docx";
+        String modelName = "induced.doc";
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 //本地图片

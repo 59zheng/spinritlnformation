@@ -1,16 +1,22 @@
 package com.ruoyi.mind.registered.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.mind.cure.domain.DbCureDbs;
 import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
 import com.ruoyi.mind.diagnosis.service.IDbDiagonsisProjectService;
 import com.ruoyi.mind.registered.domain.DbPatientAssociated;
 import com.ruoyi.mind.registered.service.IDbPatientAssociatedService;
 import com.ruoyi.mind.research.domain.DbResearchPharmacological;
 import com.ruoyi.mind.research.service.IDbResearchPharmacologicalService;
+import com.ruoyi.mind.utils.Doc2HtmlUtil;
+import com.ruoyi.mind.utils.TableListUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -202,6 +208,10 @@ public class DbPatientMessageEndController extends BaseController {
         DbDiagonsisProject dbDiagonsisProject = new DbDiagonsisProject();
         dbDiagonsisProject.setProductId(1L);
         List<DbDiagonsisProject> dbDiagonsisProjects = dbDiagonsisProjectService.selectDbDiagonsisProjectList(dbDiagonsisProject);
+        dbDiagonsisProject.setProductId(11L);
+
+        List<DbDiagonsisProject> dbDiagonsisProjects3 = dbDiagonsisProjectService.selectDbDiagonsisProjectList(dbDiagonsisProject);
+        dbDiagonsisProjects.addAll(dbDiagonsisProjects3);
         for (int i = 0; i < dbDiagonsisProjects.size(); i++) {
             if (dbDiagonsisProjects.get(i).getProductId() == null) {
                 dbDiagonsisProjects.remove(dbDiagonsisProjects.get(i));
@@ -347,6 +357,7 @@ public class DbPatientMessageEndController extends BaseController {
 //            治疗项目
             String userCode = (String) item.get("userCode");
 //             治疗次数
+
             String userName = (String) item.get("userName");
 //          存储
             DbDiagonsisProject dbDiagonsisProject = new DbDiagonsisProject();
@@ -365,5 +376,45 @@ public class DbPatientMessageEndController extends BaseController {
         return toAjax(1);
     }
 
+
+    /*
+     * 添加物理治疗
+     * */
+    @GetMapping("/openReport/{userId}")
+    public String openReport(@PathVariable("userId") Long userId, ModelMap map) {
+        String openReport = TableListUtils.getOpenReport(userId);
+        map.put("list",openReport);
+        System.out.println(openReport);
+        return  "common/openReport";
+    }
+
+    /*
+     * 查看预览
+     * */
+    @GetMapping("/preview/{userId}")
+    public String preview(@PathVariable("userId") Long userId, ModelMap mmap) throws IOException {
+        /*
+        * 查看预览
+        * */
+        DbPatientAssociated dbPatientAssociated = dbPatientAssociatedService.selectDbPatientAssociatedById(userId);
+        String documentAddress= TableListUtils.preview(dbPatientAssociated);
+
+
+        String path = TableListUtils.getPath(documentAddress);
+        Doc2HtmlUtil coc2HtmlUtil = Doc2HtmlUtil.getDoc2HtmlUtilInstance();
+        File file = null;
+        FileInputStream fileInputStream = null;
+
+        file = new File(path);
+        fileInputStream = new FileInputStream(file);
+        String pathPage = TableListUtils.getPathPage(documentAddress);
+        String PathType = TableListUtils.getPathType(documentAddress);
+        String s = coc2HtmlUtil.file2pdf(fileInputStream, pathPage, PathType);
+//        返回生成pdf路径  转化为服务器路径
+
+        String replace = TableListUtils.getPathE(documentAddress,s);
+        mmap.put("path",replace);
+        return  "common/teamLook";
+    }
 
 }

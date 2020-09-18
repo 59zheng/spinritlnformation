@@ -22,10 +22,11 @@
         <result property="adviceText"    column="advice_text"    />
         <result property="isSee"    column="is_see"    />
         <result property="electricalPicture"    column="electrical_picture"    />
+        <result property="documentAddress"    column="document_address"    />
     </resultMap>
 
     <sql id="selectDbReportDiagnosisElectricalVo">
-        select id, patient_id, signature_technician, signature_doctor, electrical_no, handedness, rhythm_text, slow_wave, dast_wave, pathology_wave, induced_experimental, clinical_seizures, note_text, results_text, advice_text, is_see, electrical_picture from db_report_diagnosis_electrical
+        select id, patient_id, signature_technician, signature_doctor, electrical_no, handedness, rhythm_text, slow_wave, dast_wave, pathology_wave, induced_experimental, clinical_seizures, note_text, results_text, advice_text, is_see, electrical_picture, document_address from db_report_diagnosis_electrical
     </sql>
 
     <select id="selectDbReportDiagnosisElectricalList" parameterType="DbReportDiagnosisElectrical" resultMap="DbReportDiagnosisElectricalResult">
@@ -47,6 +48,7 @@
             <if test="adviceText != null  and adviceText != ''"> and advice_text = #{adviceText}</if>
             <if test="isSee != null  and isSee != ''"> and is_see = #{isSee}</if>
             <if test="electricalPicture != null  and electricalPicture != ''"> and electrical_picture = #{electricalPicture}</if>
+            <if test="documentAddress != null  and documentAddress != ''"> and document_address = #{documentAddress}</if>
         </where>
     </select>
 
@@ -55,7 +57,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertDbReportDiagnosisElectrical" parameterType="DbReportDiagnosisElectrical" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insertDbReportDiagnosisElectrical" parameterType="DbReportDiagnosisElectrical" useGeneratedKeys="true" keyProperty="id">
         insert into db_report_diagnosis_electrical
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientId != null ">patient_id,</if>
@@ -74,6 +76,7 @@
             <if test="adviceText != null  and adviceText != ''">advice_text,</if>
             <if test="isSee != null  and isSee != ''">is_see,</if>
             <if test="electricalPicture != null  and electricalPicture != ''">electrical_picture,</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null ">#{patientId},</if>
@@ -92,6 +95,7 @@
             <if test="adviceText != null  and adviceText != ''">#{adviceText},</if>
             <if test="isSee != null  and isSee != ''">#{isSee},</if>
             <if test="electricalPicture != null  and electricalPicture != ''">#{electricalPicture},</if>
+            <if test="documentAddress != null  and documentAddress != ''">#{documentAddress},</if>
         </trim>
     </insert>
 
@@ -114,6 +118,7 @@
             <if test="adviceText != null  and adviceText != ''">advice_text = #{adviceText},</if>
             <if test="isSee != null  and isSee != ''">is_see = #{isSee},</if>
             <if test="electricalPicture != null  and electricalPicture != ''">electrical_picture = #{electricalPicture},</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address = #{documentAddress},</if>
         </trim>
         where id = #{id}
     </update>

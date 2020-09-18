@@ -1,7 +1,11 @@
 package com.ruoyi.mind.registered.mapper;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.mind.registered.domain.DbPatientMessage;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 病人,缴费之后创建Mapper接口
@@ -58,4 +62,7 @@ public interface DbPatientMessageMapper
      * @return 结果
      */
     public int deleteDbPatientMessageByIds(String[] ids);
+
+    @Select("select c.create_time as time, COUNT(c.id) num from db_patient_message c GROUP BY c.create_time")
+    List<Map<String,Object>> selectListByCreatTime();
 }

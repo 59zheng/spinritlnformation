@@ -2,6 +2,9 @@ package com.ruoyi.mind.diagnosis.mapper;
 
 import java.util.List;
 import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Service;
 
 /**
  * 诊断项目Mapper接口
@@ -58,4 +61,8 @@ public interface DbDiagonsisProjectMapper
      * @return 结果
      */
     public int deleteDbDiagonsisProjectByIds(String[] ids);
+
+
+    @Select("select r.document_address from ${tableName} r where r.id=#{associatedId}")
+    String selectByTableName(@Param("tableName") String tableName,@Param("associatedId") Long associatedId);
 }

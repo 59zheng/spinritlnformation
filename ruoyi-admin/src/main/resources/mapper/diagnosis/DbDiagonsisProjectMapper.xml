@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.mind.diagnosis.mapper.DbDiagonsisProjectMapper">
-    
+
     <resultMap type="DbDiagonsisProject" id="DbDiagonsisProjectResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="productId"    column="product_id"    />
         <result property="codeName"    column="code_name"    />
-        <result property="parentName" column="parent_name" />
+        <result property="tableName"    column="table_name"    />
     </resultMap>
 
     <sql id="selectDbDiagonsisProjectVo">
-        select id, name, product_id, code_name from db_diagonsis_project
+        select id, name, product_id, code_name, table_name from db_diagonsis_project
     </sql>
 
     <select id="selectDbDiagonsisProjectList" parameterType="DbDiagonsisProject" resultMap="DbDiagonsisProjectResult">
         <include refid="selectDbDiagonsisProjectVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="productId != null "> and product_id = #{productId}</if>
             <if test="codeName != null  and codeName != ''"> and code_name like concat('%', #{codeName}, '%')</if>
+            <if test="tableName != null  and tableName != ''"> and table_name like concat('%', #{tableName}, '%')</if>
         </where>
-        order by product_id
     </select>
-    
+
     <select id="selectDbDiagonsisProjectById" parameterType="Long" resultMap="DbDiagonsisProjectResult">
-        select t.id, t.name, t.product_id, t.code_name, p.name as parent_name
-        from db_diagonsis_project t
-        left join db_diagonsis_project p on p.id = t.product_id
-        where t.id = #{id}
+        <include refid="selectDbDiagonsisProjectVo"/>
+        where id = #{id}
     </select>
-        
+
     <insert id="insertDbDiagonsisProject" parameterType="DbDiagonsisProject" useGeneratedKeys="true" keyProperty="id">
         insert into db_diagonsis_project
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">name,</if>
             <if test="productId != null ">product_id,</if>
             <if test="codeName != null  and codeName != ''">code_name,</if>
-         </trim>
+            <if test="tableName != null  and tableName != ''">table_name,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">#{name},</if>
             <if test="productId != null ">#{productId},</if>
             <if test="codeName != null  and codeName != ''">#{codeName},</if>
-         </trim>
+            <if test="tableName != null  and tableName != ''">#{tableName},</if>
+        </trim>
     </insert>
 
     <update id="updateDbDiagonsisProject" parameterType="DbDiagonsisProject">
@@ -53,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''">name = #{name},</if>
             <if test="productId != null ">product_id = #{productId},</if>
             <if test="codeName != null  and codeName != ''">code_name = #{codeName},</if>
+            <if test="tableName != null  and tableName != ''">table_name = #{tableName},</if>
         </trim>
         where id = #{id}
     </update>
@@ -62,10 +63,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDbDiagonsisProjectByIds" parameterType="String">
-        delete from db_diagonsis_project where id in 
+        delete from db_diagonsis_project where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

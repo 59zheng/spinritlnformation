@@ -135,7 +135,7 @@
                         } else {
                             //    已就诊
                             if (row.isAddDetection!=""&&row.isAddDetection!=null) {
-                                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-edit"></i>检测报告</a> ');
+                                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="openReport(\'' + row.id + '\')"><i class="fa fa-edit"></i>检测报告</a> ');
                             }
                                 actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="cureAdd(\'' + row.id + '\')"><i class="fa fa-edit"></i>添加治疗项目</a> ');
                             var more = [];
@@ -167,6 +167,11 @@
         var url = prefix + '/teamAppend/' + userId;
         $.modal.open("添加团队", url, '800', '500');
     }
+    /* 检测报告 */
+    function openReport(userId) {
+        var url = ctx + 'registered/message1/openReport/' + userId;
+        $.modal.open("检测报告", url, '1000', '800');
+    }
 
     /* 添加主治团队 */
     function teamLook(userId) {
@@ -174,7 +179,7 @@
         $.modal.open("查看团队", url, '800', '500');
     }
 
-    var prefix2 = ctx + "registered/entrust";
+    var prefix2 = ctx + "registered/entrust";  var prefix2 = ctx + "registered/entrust";
 
     /* 添加医嘱 */
     function entrustAppend(userId) {
@@ -213,7 +218,6 @@
     * 添加物理治疗
     * */
     function cureAdd(userId){
-
         var url = prefix + '/cureAdd/' + userId;
         $.modal.open("治疗项添加", url, '1000', '800');
 

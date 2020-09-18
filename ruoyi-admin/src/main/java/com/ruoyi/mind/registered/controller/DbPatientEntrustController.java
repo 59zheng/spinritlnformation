@@ -1,15 +1,20 @@
 package com.ruoyi.mind.registered.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.mind.registered.domain.DbPatientMessage;
 import com.ruoyi.mind.registered.service.IDbPatientMessageService;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.web.sms.SmsSend;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +33,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
+import javax.swing.*;
+
 /**
  * 医嘱(关联诊断记录 ,关联主治医师)Controller
  *
@@ -45,6 +52,8 @@ public class DbPatientEntrustController extends BaseController {
 
     @Autowired
     private IDbPatientEntrustService dbPatientEntrustService;
+
+
 
     @RequiresPermissions("registered:entrust:view")
     @GetMapping()
@@ -185,7 +194,7 @@ public class DbPatientEntrustController extends BaseController {
         dbPatientEntrust.setUserId(userId1);
         List<DbPatientEntrust> dbPatientEntrusts = dbPatientEntrustService.selectDbPatientEntrustList(dbPatientEntrust);
         int i = 0;
-        if (dbPatientEntrusts != null) {
+        if (dbPatientEntrusts != null&&dbPatientEntrusts.size()>0) {
             DbPatientEntrust dbPatientEntrust1 = dbPatientEntrusts.get(0);
             if (!dbPatientEntrust1.getEntrustContent().equals(s)){
                 dbPatientEntrust1.setEntrustContent(s);
@@ -249,4 +258,70 @@ public class DbPatientEntrustController extends BaseController {
         dbPatientEntrust.setUserId(userId1);
         return toAjax(dbPatientEntrustService.insertDbPatientEntrust(dbPatientEntrust));
     }
+
+
+
+    /*
+    * 定时启动 （医嘱发送短信）
+    * */
+    public  void timing(){
+
+        DbPatientEntrust dbPatientEntrust = new DbPatientEntrust();
+        List<DbPatientEntrust> list = SpringUtils.getBean(IDbPatientEntrustService.class).selectDbPatientEntrustList(dbPatientEntrust);
+        System.out.println(list);
+        list.forEach(DbPatientEntrustController::accept);
+
+    }
+
+
+
+    private static void accept(DbPatientEntrust item) {
+        String entrustContent = item.getEntrustContent();
+        List<Map<String, String>> parse = (List<Map<String, String>>) JSON.parse(entrustContent);
+        parse.forEach(item2->{
+            Set<String> strings = item2.keySet();
+//            转时间比对是否相差三天
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            strings.forEach(item3->{
+                try {
+                    Date parse1 = sdf.parse(item3);
+                    long datePoorDay = DateUtils.getDatePoorDay(parse1, new Date());
+                    if (datePoorDay<=3){
+//                        发送短信
+                       senSms(item,datePoorDay);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            });
+        });
+    }
+
+    private static void senSms(DbPatientEntrust item,long day) {
+        Long patientId = item.getPatientId();
+        SmsSend smsSend = new SmsSend();
+        DbPatientMessage dbPatientMessage = SpringUtils.getBean(IDbPatientMessageService.class).selectDbPatientMessageById(patientId);
+/*
+*
+*病人端提醒短信
+* */
+//        病人电话号
+        String patientPhone = dbPatientMessage.getPatientPhone();
+//        病人姓名
+        String patientName = dbPatientMessage.getPatientName();
+        Map<String, String> map = new HashMap<>();
+        map.put("name",patientName);
+        map.put("num",day+"");
+        String s = JSON.toJSONString(map);
+        smsSend.sendSms(patientPhone,s);
+//
+        /*
+        *   医生端提醒短信  暂无
+        *
+        * */
+
+    }
+
+
 }

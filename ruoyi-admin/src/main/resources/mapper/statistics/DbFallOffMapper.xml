@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.statistics.mapper.DbFallOffMapper">
+    
+    <resultMap type="DbFallOff" id="DbFallOffResult">
+        <result property="id"    column="id"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="offClass"    column="off_class"    />
+        <result property="offState"    column="off_state"    />
+        <result property="isOff"    column="is_off"    />
+        <result property="messageId"    column="message_id"    />
+        <result property="updateName"    column="update_name"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectDbFallOffVo">
+        select id, doctor_name, off_class, off_state, is_off, message_id, update_name, update_by from db_fall_off
+    </sql>
+
+    <select id="selectDbFallOffList" parameterType="DbFallOff" resultMap="DbFallOffResult">
+        <include refid="selectDbFallOffVo"/>
+        <where>  
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name like concat('%', #{doctorName}, '%')</if>
+            <if test="offClass != null  and offClass != ''"> and off_class = #{offClass}</if>
+            <if test="offState != null  and offState != ''"> and off_state = #{offState}</if>
+            <if test="isOff != null  and isOff != ''"> and is_off = #{isOff}</if>
+            <if test="messageId != null "> and message_id = #{messageId}</if>
+            <if test="updateName != null  and updateName != ''"> and update_name like concat('%', #{updateName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectDbFallOffById" parameterType="Long" resultMap="DbFallOffResult">
+        <include refid="selectDbFallOffVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDbFallOff" parameterType="DbFallOff">
+        insert into db_fall_off
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="doctorName != null  and doctorName != ''">doctor_name,</if>
+            <if test="offClass != null  and offClass != ''">off_class,</if>
+            <if test="offState != null  and offState != ''">off_state,</if>
+            <if test="isOff != null  and isOff != ''">is_off,</if>
+            <if test="messageId != null ">message_id,</if>
+            <if test="updateName != null  and updateName != ''">update_name,</if>
+            <if test="updateBy != null ">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="doctorName != null  and doctorName != ''">#{doctorName},</if>
+            <if test="offClass != null  and offClass != ''">#{offClass},</if>
+            <if test="offState != null  and offState != ''">#{offState},</if>
+            <if test="isOff != null  and isOff != ''">#{isOff},</if>
+            <if test="messageId != null ">#{messageId},</if>
+            <if test="updateName != null  and updateName != ''">#{updateName},</if>
+            <if test="updateBy != null ">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbFallOff" parameterType="DbFallOff">
+        update db_fall_off
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="doctorName != null  and doctorName != ''">doctor_name = #{doctorName},</if>
+            <if test="offClass != null  and offClass != ''">off_class = #{offClass},</if>
+            <if test="offState != null  and offState != ''">off_state = #{offState},</if>
+            <if test="isOff != null  and isOff != ''">is_off = #{isOff},</if>
+            <if test="messageId != null ">message_id = #{messageId},</if>
+            <if test="updateName != null  and updateName != ''">update_name = #{updateName},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbFallOffById" parameterType="Long">
+        delete from db_fall_off where id = #{id}
+    </delete>
+
+    <delete id="deleteDbFallOffByIds" parameterType="String">
+        delete from db_fall_off where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

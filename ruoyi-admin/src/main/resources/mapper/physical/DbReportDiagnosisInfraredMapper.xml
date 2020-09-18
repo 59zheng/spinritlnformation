@@ -7,32 +7,34 @@
     <resultMap type="DbReportDiagnosisInfrared" id="DbReportDiagnosisInfraredResult">
         <result property="id"    column="id"    />
         <result property="patientId"    column="patient_id"    />
-        <result property="integral"    column="integral_text"    />
+        <result property="integralText"    column="integral_text"    />
         <result property="centroid"    column="centroid_text"    />
         <result property="slope"    column="slope_text"    />
-        <result property="describe"    column="describe_text"    />
+        <result property="describeText"    column="describe_text"    />
         <result property="hint"    column="hint_text"    />
         <result property="signatureTechnician"    column="signature_technician"    />
         <result property="pictureCnv"    column="picture_cnv"    />
         <result property="isSee"    column="is_see"    />
+        <result property="documentAddress"    column="document_address"    />
     </resultMap>
 
     <sql id="selectDbReportDiagnosisInfraredVo">
-        select id, patient_id, integral_text, centroid_text, slope_text, describe_text, hint_text, signature_technician, picture_cnv, is_see from db_report_diagnosis_infrared
+        select id, patient_id, integral_text, centroid_text, slope_text, describe_text, hint_text, signature_technician, picture_cnv, is_see, document_address from db_report_diagnosis_infrared
     </sql>
 
     <select id="selectDbReportDiagnosisInfraredList" parameterType="DbReportDiagnosisInfrared" resultMap="DbReportDiagnosisInfraredResult">
         <include refid="selectDbReportDiagnosisInfraredVo"/>
         <where>
             <if test="patientId != null "> and patient_id = #{patientId}</if>
-            <if test="integral != null  and integral != ''"> and integral_text = #{integral}</if>
+            <if test="integralText != null  and integralText != ''"> and integral_text = #{integralText}</if>
             <if test="centroid != null  and centroid != ''"> and centroid_text = #{centroid}</if>
             <if test="slope != null  and slope != ''"> and slope_text = #{slope}</if>
-            <if test="describe != null  and describe != ''"> and describe_text = #{describe}</if>
+            <if test="describeText != null  and describeText != ''"> and describe_text = #{describeText}</if>
             <if test="hint != null  and hint != ''"> and hint_text = #{hint}</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''"> and signature_technician = #{signatureTechnician}</if>
             <if test="pictureCnv != null  and pictureCnv != ''"> and picture_cnv = #{pictureCnv}</if>
             <if test="isSee != null  and isSee != ''"> and is_see = #{isSee}</if>
+            <if test="documentAddress != null  and documentAddress != ''"> and document_address = #{documentAddress}</if>
         </where>
     </select>
 
@@ -41,31 +43,31 @@
         where id = #{id}
     </select>
 
-    <insert id="insertDbReportDiagnosisInfrared" parameterType="DbReportDiagnosisInfrared" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insertDbReportDiagnosisInfrared" parameterType="DbReportDiagnosisInfrared" useGeneratedKeys="true" keyProperty="id">
         insert into db_report_diagnosis_infrared
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null ">id,</if>
             <if test="patientId != null ">patient_id,</if>
-            <if test="integral != null  and integral != ''">integral_text,</if>
-            <if test="centroid != null  and centroid != ''">centroid_text,</if>
-            <if test="slope != null  and slope != ''">slope_text,</if>
-            <if test="describe != null  and describe != ''">describe_text,</if>
-            <if test="hint != null  and hint != ''">hint_text,</if>
+            <if test="integralText != null  and integralText != ''">integral_text,</if>
+            <if test="centroidText != null  and centroidText != ''">centroid_text,</if>
+            <if test="slopeText != null  and slopeText != ''">slope_text,</if>
+            <if test="describeText != null  and describeText != ''">describe_text,</if>
+            <if test="hintText != null  and hintText != ''">hint_text,</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician,</if>
             <if test="pictureCnv != null  and pictureCnv != ''">picture_cnv,</if>
             <if test="isSee != null  and isSee != ''">is_see,</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null ">#{id},</if>
             <if test="patientId != null ">#{patientId},</if>
-            <if test="integral != null  and integral != ''">#{integral},</if>
-            <if test="centroid != null  and centroid != ''">#{centroid},</if>
-            <if test="slope != null  and slope != ''">#{slope},</if>
-            <if test="describe != null  and describe != ''">#{describe},</if>
-            <if test="hint != null  and hint != ''">#{hint},</if>
+            <if test="integralText != null  and integralText != ''">#{integralText},</if>
+            <if test="centroidText != null  and centroidText != ''">#{centroidText},</if>
+            <if test="slopeText != null  and slopeText != ''">#{slopeText},</if>
+            <if test="describeText != null  and describeText != ''">#{describeText},</if>
+            <if test="hintText != null  and hintText != ''">#{hintText},</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''">#{signatureTechnician},</if>
             <if test="pictureCnv != null  and pictureCnv != ''">#{pictureCnv},</if>
             <if test="isSee != null  and isSee != ''">#{isSee},</if>
+            <if test="documentAddress != null  and documentAddress != ''">#{documentAddress},</if>
         </trim>
     </insert>
 
@@ -73,14 +75,15 @@
         update db_report_diagnosis_infrared
         <trim prefix="SET" suffixOverrides=",">
             <if test="patientId != null ">patient_id = #{patientId},</if>
-            <if test="integral != null  and integral != ''">integral_text = #{integral},</if>
+            <if test="integralText != null  and integralText != ''">integral_text = #{integralText},</if>
             <if test="centroid != null  and centroid != ''">centroid_text = #{centroid},</if>
             <if test="slope != null  and slope != ''">slope_text = #{slope},</if>
-            <if test="describe != null  and describe != ''">describe_text = #{describe},</if>
+            <if test="describeText != null  and describeText != ''">describe_text = #{describeText},</if>
             <if test="hint != null  and hint != ''">hint_text = #{hint},</if>
             <if test="signatureTechnician != null  and signatureTechnician != ''">signature_technician = #{signatureTechnician},</if>
             <if test="pictureCnv != null  and pictureCnv != ''">picture_cnv = #{pictureCnv},</if>
             <if test="isSee != null  and isSee != ''">is_see = #{isSee},</if>
+            <if test="documentAddress != null  and documentAddress != ''">document_address = #{documentAddress},</if>
         </trim>
         where id = #{id}
     </update>

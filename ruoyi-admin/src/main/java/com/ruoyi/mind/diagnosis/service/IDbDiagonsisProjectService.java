@@ -66,4 +66,6 @@ public interface IDbDiagonsisProjectService
      * @return 所有诊断项目信息
      */
     public List<Ztree> selectDbDiagonsisProjectTree();
+
+    String selectByTableName(String tableName, Long associatedId);
 }

@@ -124,11 +124,10 @@ public class DbPatientEntrustServiceImpl implements IDbPatientEntrustService {
      *周处理
      * */
     public static String manageWeek(String indexOf) {
-
         Calendar instance = Calendar.getInstance();
         instance.setTime(new Date());
         int i = Integer.parseInt(indexOf);
-        instance.add(Calendar.DAY_OF_MONTH,+i+7);
+        instance.add(Calendar.DAY_OF_MONTH,+i*7);
         Date time = instance.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String format = simpleDateFormat.format(time);
@@ -149,11 +148,6 @@ public class DbPatientEntrustServiceImpl implements IDbPatientEntrustService {
         return format;
     }
 
-    public static void main(String[] args) {
-        String userCode="3周后";
-        String substring = userCode.substring(0, userCode.indexOf("周"));
-        System.out.println(substring);
-    }
 
     /**
      * 删除医嘱(关联诊断记录 ,关联主治医师)信息

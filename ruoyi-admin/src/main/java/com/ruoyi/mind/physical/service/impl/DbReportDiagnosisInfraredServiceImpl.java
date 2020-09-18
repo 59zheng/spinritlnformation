@@ -53,6 +53,7 @@ public class DbReportDiagnosisInfraredServiceImpl implements IDbReportDiagnosisI
     @Override
     public int insertDbReportDiagnosisInfrared(DbReportDiagnosisInfrared dbReportDiagnosisInfrared)
     {
+
         return dbReportDiagnosisInfraredMapper.insertDbReportDiagnosisInfrared(dbReportDiagnosisInfrared);
     }
 

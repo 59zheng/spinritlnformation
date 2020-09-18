@@ -5,16 +5,18 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.mind.registered.domain.DbPatientMessageVo2;
-import com.ruoyi.mind.registered.domain.DbPatientAssociated;
-import com.ruoyi.mind.registered.domain.DbPatientMessage;
-import com.ruoyi.mind.registered.domain.DbPatientMessageVo;
+import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
+import com.ruoyi.mind.diagnosis.service.IDbDiagonsisProjectService;
+import com.ruoyi.mind.registered.domain.*;
 import com.ruoyi.mind.registered.service.IDbPatientAssociatedService;
 import com.ruoyi.mind.registered.service.IDbPatientMessageService;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.util.HashMap;
@@ -61,16 +63,15 @@ public class TableListUtils {
     }
 
     /*
-    *
-    * 根据档案id查询主治医生id
-    *
-    * */
+     *
+     * 根据档案id查询主治医生id
+     *
+     * */
 
-    public  static  Long getTeamId (long patientId){
+    public static Long getTeamId(long patientId) {
         DbPatientMessage dbPatientMessage = SpringUtils.getBean(IDbPatientMessageService.class).selectDbPatientMessageById(patientId);
         return dbPatientMessage.getTaemId();
     }
-
 
 
     /*
@@ -94,8 +95,8 @@ public class TableListUtils {
     }
 
     /*
-    * 绑定表id
-    * */
+     * 绑定表id
+     * */
     public static int updateResultId(Long id, String name, Long userId) {
         DbPatientAssociated dbPatientAssociated = new DbPatientAssociated();
         dbPatientAssociated.setPatientId(userId);
@@ -148,6 +149,7 @@ public class TableListUtils {
         }
         return list;
     }
+
     /*
      *
      * 列表查询 诊断之后
@@ -202,36 +204,38 @@ public class TableListUtils {
      *
      * 图片路径处理
      * */
-    public static String getPathString(String path){
+    public static String getPathString(String path) {
         String replace = path.replace("/profile", "");
 
-        return "D:/ruoyi/uploadPath"+replace;
+        return "D:/ruoyi/uploadPath" + replace;
     }
 
 
-    public  static  ReplaceOptionalTextPictureRefRenderPolicy  getPictureReplace(String name , String path) throws FileNotFoundException {
-        if (path!=null&&path!=""){
+    public static ReplaceOptionalTextPictureRefRenderPolicy getPictureReplace(String name, String path) throws FileNotFoundException {
+        if (path != null && path != "") {
             String path1 = getPath(path);
             ReplaceOptionalTextPictureRefRenderPolicy pictureCnv = new ReplaceOptionalTextPictureRefRenderPolicy(name,
                     new FileInputStream(path1),
                     XWPFDocument.PICTURE_TYPE_PNG);
             return pictureCnv;
-        }return  null;
+        }
+        return null;
 
     }
 
     /*
-    * 路径拼接  完整路径
-    * */
-    public static String  getPath(String path) {
+     * 路径拼接  完整路径
+     * */
+    public static String getPath(String path) {
         String profile = Global.getProfile();
         String replace = path.replace("/profile", profile);
         return replace;
     }
+
     /*
-    *   存储地址
-    * */
-    public static String  getPathPage(String path) {
+     *   存储地址
+     * */
+    public static String getPathPage(String path) {
         String profile = Global.getProfile();
 //        D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png
 //        /profile/upload/2020/06/24/747593fb4ef8643f2fc4ec776ba24e22.jpg
@@ -239,17 +243,17 @@ public class TableListUtils {
         String[] strings = replace.split("/");
         List<String> strings1 = Arrays.asList(strings);
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < strings1.size()-1; i++) {
-            stringBuilder.append(strings1.get(i)+"/");
+        for (int i = 0; i < strings1.size() - 1; i++) {
+            stringBuilder.append(strings1.get(i) + "/");
         }
         return stringBuilder.toString();
     }
 
 
     /*
-    *替换文件名
-    * */
-    public static String  getPathE(String path,String name) {
+     *替换文件名
+     * */
+    public static String getPathE(String path, String name) {
         String[] split = path.split("/");
         List<String> strings = Arrays.asList(split);
         String s = strings.get((strings.size() - 1));
@@ -258,11 +262,10 @@ public class TableListUtils {
     }
 
 
-
     /*
-    * 后缀
-    * */
-    public static String  getPathType(String path) {
+     * 后缀
+     * */
+    public static String getPathType(String path) {
 //        D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png
 //        /profile/upload/2020/06/24/747593fb4ef8643f2fc4ec776ba24e22.jpg
         String[] strings = path.split("/");
@@ -278,6 +281,57 @@ public class TableListUtils {
 //        D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png
 //        /profile/upload/2020/06/24/747593fb4ef8643f2fc4ec776ba24e22.jpg
         String replace = s.replace(profile, "/profile");
-        return  replace;
+        return replace;
+    }
+
+
+    private static String[] arr = {""};
+
+
+    public static String getOpenReport(Long userId) {
+//    检测报告
+        DbPatientAssociated dbDiagonsisProject = new DbPatientAssociated();
+        dbDiagonsisProject.setPatientId(userId);
+        dbDiagonsisProject.setIsOk("1");
+        List<DbPatientAssociated> dbPatientAssociateds = SpringUtils.getBean(IDbPatientAssociatedService.class).selectDbDiagonsisProjectListBycreateTime(dbDiagonsisProject);
+        ArrayList<DbOpenReport> objects = new ArrayList<>();
+        dbPatientAssociateds.forEach(itm -> {
+            DbOpenReport dbOpenReport = new DbOpenReport();
+            DbDiagonsisProject dbDiagonsisProject1 = new DbDiagonsisProject();
+            String associatedTable = itm.getAssociatedTable();
+            dbDiagonsisProject1.setCodeName(associatedTable);
+            List<DbDiagonsisProject> dbDiagonsisProjects = SpringUtils.getBean(IDbDiagonsisProjectService.class).selectDbDiagonsisProjectList(dbDiagonsisProject1);
+            dbOpenReport.setName(dbDiagonsisProjects.get(0).getName());
+            DbDiagonsisProject dbDiagonsisProject2 = SpringUtils.getBean(IDbDiagonsisProjectService.class).selectDbDiagonsisProjectById(dbDiagonsisProjects.get(0).getProductId());
+            dbOpenReport.setPorjectName(dbDiagonsisProject2.getName());
+            /*
+             * 时间处理
+             * */
+            Date createTime = itm.getCreateTime();
+            String s = DateUtils.parseDateToStr("yyyy年MM月dd日HH时MM分", createTime);
+            dbOpenReport.setDateTime(s);
+            dbOpenReport.setDbPatientAssociated(itm);
+            objects.add(dbOpenReport);
+
+        });
+
+
+        String json = JSON.toJSONString(objects).trim();
+        String s = StringEscapeUtils.unescapeHtml(json);
+
+
+        return s;
+    }
+
+    public static String preview(DbPatientAssociated dbDiagonsisProject) {
+    //获取对应关联表的文档路径
+        DbDiagonsisProject dbDiagonsisProject1 = new DbDiagonsisProject();
+        dbDiagonsisProject1.setCodeName(dbDiagonsisProject.getAssociatedTable());
+        List<DbDiagonsisProject> dbDiagonsisProjects = SpringUtils.getBean(IDbDiagonsisProjectService.class).selectDbDiagonsisProjectList(dbDiagonsisProject1);
+        String tableName = dbDiagonsisProjects.get(0).getTableName();
+        String s=SpringUtils.getBean(IDbDiagonsisProjectService.class).selectByTableName(tableName,dbDiagonsisProject.getAssociatedId());
+
+
+        return s;
     }
 }

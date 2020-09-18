@@ -2,6 +2,7 @@ package com.ruoyi.mind.registered.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.mind.diagnosis.domain.DbDiagonsisProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.mind.registered.mapper.DbPatientAssociatedMapper;
@@ -80,6 +81,11 @@ public class DbPatientAssociatedServiceImpl implements IDbPatientAssociatedServi
     public int deleteDbPatientAssociatedByIds(String ids)
     {
         return dbPatientAssociatedMapper.deleteDbPatientAssociatedByIds(Convert.toStrArray(ids));
+    }
+
+    @Override
+    public List<DbPatientAssociated> selectDbDiagonsisProjectListBycreateTime(DbPatientAssociated dbDiagonsisProject) {
+        return dbPatientAssociatedMapper.selectDbDiagonsisProjectListBycreateTime(dbDiagonsisProject.getPatientId());
     }
 
     /**

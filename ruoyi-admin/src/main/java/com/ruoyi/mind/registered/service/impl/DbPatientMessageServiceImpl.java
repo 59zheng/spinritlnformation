@@ -1,6 +1,9 @@
 package com.ruoyi.mind.registered.service.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +71,11 @@ public class DbPatientMessageServiceImpl implements IDbPatientMessageService
     public int updateDbPatientMessage(DbPatientMessage dbPatientMessage)
     {
         return dbPatientMessageMapper.updateDbPatientMessage(dbPatientMessage);
+    }
+
+    @Override
+    public List<Map<String,Object >> selectListByCreatTime() {
+        return dbPatientMessageMapper.selectListByCreatTime();
     }
 
     /**

@@ -94,6 +94,12 @@ public class DbDiagonsisProjectServiceImpl implements IDbDiagonsisProjectService
         return dbDiagonsisProjectMapper.deleteDbDiagonsisProjectById(id);
     }
 
+
+    @Override
+    public String selectByTableName(String tableName, Long associatedId) {
+        return dbDiagonsisProjectMapper.selectByTableName(tableName,associatedId);
+    }
+
     /**
      * 查询诊断项目树列表
      * 

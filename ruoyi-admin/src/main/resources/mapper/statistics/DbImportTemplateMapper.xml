@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.statistics.mapper.DbImportTemplateMapper">
+    
+    <resultMap type="DbImportTemplate" id="DbImportTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="performMonth"    column="perform_month"    />
+        <result property="openDepartment"    column="open_department"    />
+        <result property="executiveDepartment"    column="executive_department"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="projectClassification"    column="project_classification"    />
+        <result property="projectCode"    column="project_code"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="totalNumber"    column="total_number"    />
+        <result property="totalCost"    column="total_cost"    />
+    </resultMap>
+
+    <sql id="selectDbImportTemplateVo">
+        select id, perform_month, open_department, executive_department, doctor_name, project_classification, project_code, project_name, total_number, total_cost from db_import_template
+    </sql>
+
+    <select id="selectDbImportTemplateList" parameterType="DbImportTemplate" resultMap="DbImportTemplateResult">
+        <include refid="selectDbImportTemplateVo"/>
+        <where>  
+            <if test="performMonth != null  and performMonth != ''"> and perform_month = #{performMonth}</if>
+            <if test="openDepartment != null  and openDepartment != ''"> and open_department = #{openDepartment}</if>
+            <if test="executiveDepartment != null  and executiveDepartment != ''"> and executive_department = #{executiveDepartment}</if>
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name = ('%', #{doctorName}, '%')</if>
+            <if test="projectClassification != null  and projectClassification != ''"> and project_classification = #{projectClassification}</if>
+            <if test="projectCode != null  and projectCode != ''"> and project_code = #{projectCode}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name =#{projectName}</if>
+            <if test="totalNumber != null "> and total_number = #{totalNumber}</if>
+            <if test="totalCost != null "> and total_cost = #{totalCost}</if>
+        </where>
+    </select>
+    
+    <select id="selectDbImportTemplateById" parameterType="Long" resultMap="DbImportTemplateResult">
+        <include refid="selectDbImportTemplateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDbImportTemplate" parameterType="DbImportTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into db_import_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="performMonth != null  and performMonth != ''">perform_month,</if>
+            <if test="openDepartment != null  and openDepartment != ''">open_department,</if>
+            <if test="executiveDepartment != null  and executiveDepartment != ''">executive_department,</if>
+            <if test="doctorName != null  and doctorName != ''">doctor_name,</if>
+            <if test="projectClassification != null  and projectClassification != ''">project_classification,</if>
+            <if test="projectCode != null  and projectCode != ''">project_code,</if>
+            <if test="projectName != null  and projectName != ''">project_name,</if>
+            <if test="totalNumber != null ">total_number,</if>
+            <if test="totalCost != null ">total_cost,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="performMonth != null  and performMonth != ''">#{performMonth},</if>
+            <if test="openDepartment != null  and openDepartment != ''">#{openDepartment},</if>
+            <if test="executiveDepartment != null  and executiveDepartment != ''">#{executiveDepartment},</if>
+            <if test="doctorName != null  and doctorName != ''">#{doctorName},</if>
+            <if test="projectClassification != null  and projectClassification != ''">#{projectClassification},</if>
+            <if test="projectCode != null  and projectCode != ''">#{projectCode},</if>
+            <if test="projectName != null  and projectName != ''">#{projectName},</if>
+            <if test="totalNumber != null ">#{totalNumber},</if>
+            <if test="totalCost != null ">#{totalCost},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbImportTemplate" parameterType="DbImportTemplate">
+        update db_import_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="performMonth != null  and performMonth != ''">perform_month = #{performMonth},</if>
+            <if test="openDepartment != null  and openDepartment != ''">open_department = #{openDepartment},</if>
+            <if test="executiveDepartment != null  and executiveDepartment != ''">executive_department = #{executiveDepartment},</if>
+            <if test="doctorName != null  and doctorName != ''">doctor_name = #{doctorName},</if>
+            <if test="projectClassification != null  and projectClassification != ''">project_classification = #{projectClassification},</if>
+            <if test="projectCode != null  and projectCode != ''">project_code = #{projectCode},</if>
+            <if test="projectName != null  and projectName != ''">project_name = #{projectName},</if>
+            <if test="totalNumber != null ">total_number = #{totalNumber},</if>
+            <if test="totalCost != null ">total_cost = #{totalCost},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbImportTemplateById" parameterType="Long">
+        delete from db_import_template where id = #{id}
+    </delete>
+
+    <delete id="deleteDbImportTemplateByIds" parameterType="String">
+        delete from db_import_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

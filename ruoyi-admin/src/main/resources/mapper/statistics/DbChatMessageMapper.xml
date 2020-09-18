@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.statistics.mapper.DbChatMessageMapper">
+    
+    <resultMap type="DbChatMessage" id="DbChatMessageResult">
+        <result property="id"    column="id"    />
+        <result property="chatName"    column="chat_name"    />
+        <result property="chatList"    column="chat_list"    />
+        <result property="peopleChatId"    column="people_chat_id"    />
+    </resultMap>
+
+    <sql id="selectDbChatMessageVo">
+        select id, chat_name, chat_list, people_chat_id from db_chat_message
+    </sql>
+
+    <select id="selectDbChatMessageList" parameterType="DbChatMessage" resultMap="DbChatMessageResult">
+        <include refid="selectDbChatMessageVo"/>
+        <where>  
+            <if test="chatName != null  and chatName != ''"> and chat_name like concat('%', #{chatName}, '%')</if>
+            <if test="chatList != null  and chatList != ''"> and chat_list = #{chatList}</if>
+            <if test="peopleChatId != null  and peopleChatId != ''"> and people_chat_id = #{peopleChatId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDbChatMessageById" parameterType="Long" resultMap="DbChatMessageResult">
+        <include refid="selectDbChatMessageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDbChatMessage" parameterType="DbChatMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into db_chat_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chatName != null  and chatName != ''">chat_name,</if>
+            <if test="chatList != null  and chatList != ''">chat_list,</if>
+            <if test="peopleChatId != null  and peopleChatId != ''">people_chat_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chatName != null  and chatName != ''">#{chatName},</if>
+            <if test="chatList != null  and chatList != ''">#{chatList},</if>
+            <if test="peopleChatId != null  and peopleChatId != ''">#{peopleChatId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDbChatMessage" parameterType="DbChatMessage">
+        update db_chat_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chatName != null  and chatName != ''">chat_name = #{chatName},</if>
+            <if test="chatList != null  and chatList != ''">chat_list = #{chatList},</if>
+            <if test="peopleChatId != null  and peopleChatId != ''">people_chat_id = #{peopleChatId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDbChatMessageById" parameterType="Long">
+        delete from db_chat_message where id = #{id}
+    </delete>
+
+    <delete id="deleteDbChatMessageByIds" parameterType="String">
+        delete from db_chat_message where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -3,7 +3,6 @@ package com.ruoyi.mind.physical.controller;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
-import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -15,23 +14,22 @@ import com.ruoyi.mind.physical.domain.DbReportDiagnosisInduced;
 import com.ruoyi.mind.physical.service.IDbReportDiagnosisInducedService;
 import com.ruoyi.mind.registered.domain.DbPatientMessageVo;
 import com.ruoyi.mind.utils.TableListUtils;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Name;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -158,25 +156,7 @@ public class DbReportDiagnosisInducedEndController extends BaseController {
          * 图片路径处理
          * */
 
-
-        URL resource = DbReportDiagnosisInducedEndController.class.getResource("/doc/induced.docx");
-        Resource resource2 = new ClassPathResource("/doc/induced.docx");
-        String absolutePath = resource2.getFile().getAbsolutePath();
-
-      /*  String property = System.getProperty("induced.docx");
-        String downloadPath = new File(resource.toURI()).getAbsolutePath();*/
-        String modelName =absolutePath;
-
-        /*
-        *
-        * 图片处理
-        * */
-/*        ReplaceOptionalTextPictureRefRenderPolicy prictureP300 = new ReplaceOptionalTextPictureRefRenderPolicy("prictureP300",
-                new FileInputStream("D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png"),
-                XWPFDocument.PICTURE_TYPE_PNG);
-        ReplaceOptionalTextPictureRefRenderPolicy pictureCnv = new ReplaceOptionalTextPictureRefRenderPolicy("pictureCnv",
-                new FileInputStream("D:/ruoyi/uploadPath/upload/2020/06/12/804ab1617afd7c40fbe2ad8b83a1413e.png"),
-                XWPFDocument.PICTURE_TYPE_PNG);*/
+        File file = ResourceUtils.getFile("classpath:induced.docx");
 
 
         ReplaceOptionalTextPictureRefRenderPolicy pictureReplace = TableListUtils.getPictureReplace("prictureP300", (String) stringObjectMap.get("prictureP300"));
@@ -194,37 +174,39 @@ public class DbReportDiagnosisInducedEndController extends BaseController {
         configureBuilder.referencePolicy(pictureReplace3);
         configureBuilder.referencePolicy(pictureReplace4);
         configureBuilder.referencePolicy(pictureReplace5);
-        Configure configure3 =configureBuilder.build();
+        Configure configure3 = configureBuilder.build();
 
 
-        XWPFTemplate template = XWPFTemplate.compile( modelName, configure3)
+        XWPFTemplate template = XWPFTemplate.compile(file, configure3)
                 .render(stringObjectMap1);
-
-        response.setContentType("application/octet-stream");
+        // 清空response
+        response.reset();
+//        response.setContentType("application/octet-stream");
         String patientName = (String) stringObjectMap1.get("patientName");
-        String name="诱发电位报告"+"("+patientName+")"+".docx";
-        String s = new String(name.getBytes(), "iso-8859-1");
-
-        response.setHeader("Content-disposition", "attachment;filename=\"" + s + "\"");
+        String name = "诱发电位报告" + "(" + patientName + ")" + ".docx";
 
         try {
             // HttpServletResponse response
-            ServletOutputStream out = response.getOutputStream();
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"" + new String(name.getBytes("gbk"),"iso8859-1")+ ".doc" + "\"");
+
+// HttpServletResponse response
+            OutputStream out = response.getOutputStream();
             BufferedOutputStream bos = new BufferedOutputStream(out);
             template.write(bos);
             template.close();
+            bos.flush();
+            bos.close();
             out.flush();
             out.close();
-            template.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
 
 }

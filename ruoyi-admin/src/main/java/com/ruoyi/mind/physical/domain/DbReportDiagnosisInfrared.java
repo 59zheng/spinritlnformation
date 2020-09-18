@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 红外热成像及血流图检查对象 db_report_diagnosis_infrared
  *
  * @author zheng
- * @date 2020-06-29
+ * @date 2020-07-20
  */
 public class DbReportDiagnosisInfrared extends BaseEntity
 {
@@ -24,7 +24,7 @@ public class DbReportDiagnosisInfrared extends BaseEntity
 
     /** Integral值 */
     @Excel(name = "Integral值" )
-    private String integral;
+    private String integralText;
 
     /** Centroid值 */
     @Excel(name = "Centroid值" )
@@ -36,7 +36,7 @@ public class DbReportDiagnosisInfrared extends BaseEntity
 
     /** 波普描述 */
     @Excel(name = "波普描述" )
-    private String describe;
+    private String describeText;
 
     /** 诊断提示 */
     @Excel(name = "诊断提示" )
@@ -54,110 +54,134 @@ public class DbReportDiagnosisInfrared extends BaseEntity
     @Excel(name = "是否检测完成" )
     private String isSee;
 
-    public void setId(Long id)
-    {
+    @Override
+    public String toString() {
+        return "DbReportDiagnosisInfrared{" +
+                "id=" + id +
+                ", patientId=" + patientId +
+                ", integralText='" + integralText + '\'' +
+                ", centroid='" + centroid + '\'' +
+                ", slope='" + slope + '\'' +
+                ", describeText='" + describeText + '\'' +
+                ", hint='" + hint + '\'' +
+                ", signatureTechnician='" + signatureTechnician + '\'' +
+                ", pictureCnv='" + pictureCnv + '\'' +
+                ", isSee='" + isSee + '\'' +
+                ", documentAddress='" + documentAddress + '\'' +
+                '}';
+    }
+
+    public DbReportDiagnosisInfrared(Long id, Long patientId, String integralText, String centroid, String slope, String describeText, String hint, String signatureTechnician, String pictureCnv, String isSee, String documentAddress) {
+        this.id = id;
+        this.patientId = patientId;
+        this.integralText = integralText;
+        this.centroid = centroid;
+        this.slope = slope;
+        this.describeText = describeText;
+        this.hint = hint;
+        this.signatureTechnician = signatureTechnician;
+        this.pictureCnv = pictureCnv;
+        this.isSee = isSee;
+        this.documentAddress = documentAddress;
+    }
+
+    /** 文档地址 */
+    @Excel(name = "文档地址" )
+    private String documentAddress;
+
+    public DbReportDiagnosisInfrared() {
+    }
+
+    public static long getSerialVersionUID() {
+
+        return serialVersionUID;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId()
-    {
-        return id;
+    public Long getPatientId() {
+        return patientId;
     }
-    public void setPatientId(Long patientId)
-    {
+
+    public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
 
-    public Long getPatientId()
-    {
-        return patientId;
-    }
-    public void setIntegral(String integral)
-    {
-        this.integral = integral;
+    public String getIntegralText() {
+        return integralText;
     }
 
-    public String getIntegral()
-    {
-        return integral;
+    public void setIntegralText(String integralText) {
+        this.integralText = integralText;
     }
-    public void setCentroid(String centroid)
-    {
+
+    public String getCentroid() {
+        return centroid;
+    }
+
+    public void setCentroid(String centroid) {
         this.centroid = centroid;
     }
 
-    public String getCentroid()
-    {
-        return centroid;
+    public String getSlope() {
+        return slope;
     }
-    public void setSlope(String slope)
-    {
+
+    public void setSlope(String slope) {
         this.slope = slope;
     }
 
-    public String getSlope()
-    {
-        return slope;
-    }
-    public void setDescribe(String describe)
-    {
-        this.describe = describe;
+    public String getDescribeText() {
+        return describeText;
     }
 
-    public String getDescribe()
-    {
-        return describe;
+    public void setDescribeText(String describeText) {
+        this.describeText = describeText;
     }
-    public void setHint(String hint)
-    {
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
         this.hint = hint;
     }
 
-    public String getHint()
-    {
-        return hint;
+    public String getSignatureTechnician() {
+        return signatureTechnician;
     }
-    public void setSignatureTechnician(String signatureTechnician)
-    {
+
+    public void setSignatureTechnician(String signatureTechnician) {
         this.signatureTechnician = signatureTechnician;
     }
 
-    public String getSignatureTechnician()
-    {
-        return signatureTechnician;
+    public String getPictureCnv() {
+        return pictureCnv;
     }
-    public void setPictureCnv(String pictureCnv)
-    {
+
+    public void setPictureCnv(String pictureCnv) {
         this.pictureCnv = pictureCnv;
     }
 
-    public String getPictureCnv()
-    {
-        return pictureCnv;
-    }
-    public void setIsSee(String isSee)
-    {
-        this.isSee = isSee;
-    }
-
-    public String getIsSee()
-    {
+    public String getIsSee() {
         return isSee;
     }
 
-    @Override
-    public String toString(){
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id" ,getId())
-                .append("patientId" ,getPatientId())
-                .append("integral" ,getIntegral())
-                .append("centroid" ,getCentroid())
-                .append("slope" ,getSlope())
-                .append("describe" ,getDescribe())
-                .append("hint" ,getHint())
-                .append("signatureTechnician" ,getSignatureTechnician())
-                .append("pictureCnv" ,getPictureCnv())
-                .append("isSee" ,getIsSee())
-                .toString();
+    public void setIsSee(String isSee) {
+        this.isSee = isSee;
+    }
+
+    public String getDocumentAddress() {
+        return documentAddress;
+    }
+
+    public void setDocumentAddress(String documentAddress) {
+        this.documentAddress = documentAddress;
     }
 }

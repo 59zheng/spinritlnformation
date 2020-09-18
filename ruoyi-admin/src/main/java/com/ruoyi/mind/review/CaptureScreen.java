@@ -34,6 +34,10 @@ public class CaptureScreen extends JFrame implements ActionListener {
     private JTabbedPane jtp;//一个放置很多份图片
     private int index;//一个一直会递增的索引,用于标认图片
     private JRadioButton java, system;//JAVA界面,系统界面
+    /*
+    *
+    * 默认不就是js里边不加var 全局的   加修饰符就是私有的了
+    * */
 
     /**
      * Creates a new instance of CaptureScreen
@@ -104,6 +108,8 @@ public class CaptureScreen extends JFrame implements ActionListener {
             }
         });
     }
+
+
 
     private void updates() {
         this.setVisible(true);

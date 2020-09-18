@@ -2,6 +2,8 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:include="include :: header('新增脑电诊断')"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+    <th:block th:include="include :: jasny-bootstrap-css"/>
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -103,26 +105,25 @@
                 <input name="adviceText" class="form-control" type="text">
             </div>
         </div>
+        <input id="electricalPicture" name="electricalPicture" value="" type="text" style="display:none">
         <div class="form-group">
-            <label class="col-sm-3 control-label">图片</label>
-            <div class="col-sm-4" data-provides="fileinput">
-                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
-                    <img id="img300" th:src="@{electricalPicture}">
-                    <input id="electricalPicture" name="electricalPicture" value="" type="text" style="display:none">
-                </div>
-                <div class="  "
-                     style="max-width: 200px; max-height: 150px;"></div>
-                <div onclick="screenshot()">
-						          <span class="btn btn-white ">
-                                      <span>P30  </span>
-                                      <span>选择图片</span>
-                                  </span>
+            <label class="col-sm-3 control-label"></label>
+            <span class="btn btn-white " id="openScreenshot">
+                            <a href="Simu://hello">打开截图程序</a>
+          </span>
+        </div>
+        <div class="form-group">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">图片</label>
+                <div class="col-sm-8">
+                    <input id="fileinput-demo-1" type="file" multiple>
                 </div>
             </div>
         </div>
     </form>
 </div>
 <th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
 <script type="text/javascript">
     var prefix = ctx + "physical/electrical"
     $("#form-electrical-add").validate({
@@ -136,27 +137,28 @@
             $.operate.save(prefix + "/add", $('#form-electrical-add').serialize());
         }
     }
-    function screenshot() {
-        event.stopPropagation();
-        $.ajax({
-            type: "GET",
-            url: ctx + "common/uploadScreen",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (result) {
-                if (result.code == web_status.SUCCESS) {
-                    $("#img300").attr('src', result.fileName);
-                    $("#electricalPicture").attr('value', result.fileName);
-                } else {
-                    $.modal.alertError(result.msg);
-                }
+
+    $(document).ready(function () {
+        $("#fileinput-demo-1").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': '/common/uploadInput',
+            uploadExtraData: {
+                file: $("#fileinput-demo-1").val(),
             },
-            error: function (error) {
-                $.modal.alertWarning("图片上传失败。");
+            initialPreviewAsData: true,
+            enctype: 'multipart/form-data',
+            uploadAsync: true,
+        });
+
+        $("#fileinput-demo-1").on("fileuploaded", function (event, data, previewId, index) {
+            var res = data.response;
+            if (res.code == 0) {
+                // location.href = res.url;
+                document.getElementById('electricalPicture').value = res.fileName;
             }
         });
-    }
+
+    });
 </script>
 </body>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:include="include :: header('病人时间轴')"/>
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+<body class="gray-bg">
+<div class="row animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div id="ibox-content">
+            <div id="vertical-timeline" class="vertical-container light-timeline">
+              <!--  <div class="vertical-timeline-block">
+                    <div class="vertical-timeline-icon navy-bg"><i class="fa fa-briefcase"></i></div>
+                    <div class="vertical-timeline-content">
+                        <h2>会议</h2>
+                        <p>上一年的销售业绩发布会。总结产品营销和销售趋势及销售的现状。</p>
+                        <a href="#" class="btn btn-sm btn-primary"> 更多信息</a>
+                        <small>2月3日</small>
+                     </span>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript" th:inline="javascript">
+    /*
+* 初始化选项
+* */
+    window.onload = function opnenONE() {
+        var list1 = [[${list}]];
+        var a = JSON.parse(list1);
+        console.log(a);
+
+        var start = $('#vertical-timeline');//选择多选框的ID
+        for (var i = 0; i < a.length; i++) {  //循环LIST
+            var veh = a[i];//获取LIST里面的对象
+
+            start.append(' <div class="vertical-timeline-block">  ' +
+                ' <div class="vertical-timeline-icon navy-bg"><i class="fa fa-briefcase"></i></div>' +
+                '<div class="vertical-timeline-content">' +
+                '  <h2>' + veh.porjectName + '</h2>' +
+                '<p>' + veh.name + '</p>' +
+                '<a href="#" class="btn btn-sm btn-primary" onclick="openall(' + veh.dbPatientAssociated.id + ')"> 详细信息</a>' +
+                '<span class="vertical-date"><br><small>' + veh.dateTime + '</small></span>' +
+                '</div>' +
+                '</div>');
+          /*  start.append(' <div class="vertical-timeline-block"> ');
+            start.append(' <div class="vertical-timeline-icon navy-bg"><i class="fa fa-briefcase"></i></div>');
+            start.append('<div class="vertical-timeline-content"> ');
+            start.append('  <h2>' + veh.porjectName + '</h2>');
+            start.append(' <p>' + veh.name + '</p>');
+            start.append(' <a href="#" class="btn btn-sm btn-primary" onclick="open(' + veh.dbPatientAssociated.id + ')"> 详细信息</a>');
+            start.append('<span class="vertical-date"><br><small>' + veh.dateTime + '</small></span>');
+            start.append('</div>');
+            start.append('</div>');*/
+            $("#vertical-timeline").trigger("create");
+        }
+    };
+    var prefix = ctx + "registered/message1";
+
+    function openall(userId) {
+    //    打开预览
+        console.log("行不行")
+        var url = prefix + '/preview/' + userId;
+        $.modal.open("预览", url, '850', '800');
+
+
+    }
+
+    function submitHandler() {
+       $.modal.close();
+    }
+
+</script>
+</body>
+</html>

@@ -1,121 +1,166 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('修改红外热成像及血流图检查')" />
+    <th:block th:include="include :: header('修改红外热成像及血流图检查')"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
 </head>
 <body class="white-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-infrared-edit" th:object="${dbReportDiagnosisInfrared}">
-            <input name="id" th:field="*{id}" type="hidden">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-infrared-edit" th:object="${dbReportDiagnosisInfrared}">
+        <input name="id" th:field="*{id}" type="hidden">
 
-                    <input name="patientId" th:field="*{patientId}" class="form-control" type="text" style="display:none">
+        <input name="patientId" th:field="*{patientId}" class="form-control" type="text" style="display:none">
 
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">Integral值：</label>
-                <div class="col-sm-8">
-                    <input name="integral" th:field="*{integral}" class="form-control" type="text">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Integral值：</label>
+            <div class="col-sm-8">
+                <input name="integralText" th:field="*{integralText}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Centroid值：</label>
+            <div class="col-sm-8">
+                <input name="centroidText" th:field="*{centroidText}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Slope值：</label>
+            <div class="col-sm-8">
+                <input name="slopeText" th:field="*{slopeText}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">波普描述：</label>
+            <div class="col-sm-8">
+                <input name="describeText" th:field="*{describeText}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">诊断提示：</label>
+            <div class="col-sm-8">
+                <input name="hintText" th:field="*{hintText}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">技师签名：</label>
+            <div class="col-sm-8">
+                <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text"
+                       style="display:none">
+                <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
+                    <img id="imgsignatureTechnician" src="">
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">Centroid值：</label>
-                <div class="col-sm-8">
-                    <input name="centroid" th:field="*{centroid}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">Slope值：</label>
-                <div class="col-sm-8">
-                    <input name="slope" th:field="*{slope}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">波普描述：</label>
-                <div class="col-sm-8">
-                    <input name="describe" th:field="*{describe}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">诊断提示：</label>
-                <div class="col-sm-8">
-                    <input name="hint" th:field="*{hint}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">技师签名：</label>
-                <div class="col-sm-8">
-                    <input name="signatureTechnician" th:field="*{signatureTechnician}" class="form-control" type="text" style="display:none">
-                    <div class="fileinput-new thumbnail"  style="width: 140px; height: 140px;">
-                    <img id="imgsignatureTechnician" src="" >
-                    </div>
-                </div>
-            </div>
-          
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <span class="btn btn-white " id="openScreenshot" >
+                            <a href="Simu://hello">打开截图程序</a>
+          </span>
+        </div>
+        <div class="form-group">
             <div class="form-group">
                 <label class="col-sm-3 control-label">图片</label>
-                <div class="col-sm-4" data-provides="fileinput">
-                    <div class="fileinput-new thumbnail" style="width: 140px; height: 140px;">
-                        <img id="imgCnv" src="${pictureCnv}" >
-                        <input id="pictureCnv" name="pictureCnv" value="" type="text" style="display:none" th:field="*{pictureCnv}">
-                    </div>
-                    <div class="  "
-                         style="max-width: 200px; max-height: 150px;"></div>
-                    <div onclick="screenshot()">
-				<span class="btn btn-white ">
-                     <span>选择图片</span>
-                </span>
-                    </div>
+                <div class="col-sm-8">
+                    <input id="fileinput-demo-1" type="file" multiple>
                 </div>
             </div>
-        </form>
-    </div>
-    <th:block th:include="include :: footer" />
-    <script type="text/javascript">
-        var prefix = ctx + "physical/infrared";
-        $("#form-infrared-edit").validate({
-            focusCleanup: true
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "physical/infrared";
+    $("#form-infrared-edit").validate({
+        focusCleanup: true
+    });
+    $(function () {
+        var skinName = "[[${dbReportDiagnosisInfrared.pictureCnv}]]";
+        var signatureTechnician = "[[${dbReportDiagnosisInfrared.signatureTechnician}]]";
+        $("#imgCnv").attr('src', skinName);
+        $("#imgsignatureTechnician").attr('src', signatureTechnician);
+    });
+
+    $(document).ready(function () {
+        var skinName = "[[${dbReportDiagnosisInfrared.pictureCnv}]]";
+        $("#fileinput-demo-1").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': '/common/uploadInput',
+            uploadExtraData: {
+                file: $("#fileinput-demo-1").val(),
+            },
+            initialPreview:skinName,
+            initialPreviewAsData: true,
+            enctype: 'multipart/form-data',
+            uploadAsync: true,
         });
 
-
-        $(function(){
-            var skinName = "[[${dbReportDiagnosisInfrared.pictureCnv}]]";
-            var signatureTechnician = "[[${dbReportDiagnosisInfrared.signatureTechnician}]]";
-            $("#imgCnv").attr('src', skinName);
-            $("#imgsignatureTechnician").attr('src', signatureTechnician);
-        });
-
-        function submitHandler() {
-            if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-infrared-edit').serialize());
+        $("#fileinput-demo-1").on("fileuploaded", function (event, data, previewId, index) {
+            var res = data.response;
+            if (res.code == 0) {
+                // location.href = res.url;
+                document.getElementById('pictureCnv').value = res.fileName;
             }
+        });
+
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-infrared-edit').serialize());
         }
+    }
 
 
 
-
-        /*
+    /*
 * 图片点击事件
 * */
-        function screenshot() {
-            event.stopPropagation();
-            $.ajax({
-                type: "GET",
-                url: ctx + "common/uploadScreen",
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (result) {
-                    if (result.code == web_status.SUCCESS) {
-                        $("#imgCnv").attr('src', result.fileName);
-                        $("#pictureCnv").attr('value', result.fileName);
-                    } else {
-                        $.modal.alertError(result.msg);
-                    }
-                },
-                error: function (error) {
-                    $.modal.alertWarning("图片上传失败。");
+    function screenshot() {
+        event.stopPropagation();
+        $.ajax({
+            type: "GET",
+            url: ctx + "common/uploadScreen",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    $("#imgCnv").attr('src', result.fileName);
+                    $("#pictureCnv").attr('value', result.fileName);
+                } else {
+                    $.modal.alertError(result.msg);
                 }
-            });
-        }
-    </script>
+            },
+            error: function (error) {
+                $.modal.alertWarning("图片上传失败。");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        $("#fileinput-demo-1").fileinput({
+            'theme': 'explorer-fas',
+            'uploadUrl': '/common/uploadInput',
+            uploadExtraData: {
+                file: $("#fileinput-demo-1").val(),
+            },
+            initialPreviewAsData: true,
+            enctype: 'multipart/form-data',
+            uploadAsync: true,
+        });
+
+        $("#fileinput-demo-1").on("fileuploaded", function (event, data, previewId, index) {
+            var res = data.response;
+            if (res.code == 0) {
+                // location.href = res.url;
+                document.getElementById('pictureCnv').value = res.fileName;
+            }
+        });
+
+    });
+</script>
 </body>
 </html>

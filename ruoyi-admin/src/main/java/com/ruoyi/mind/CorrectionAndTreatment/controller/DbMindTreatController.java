@@ -1,6 +1,15 @@
 package com.ruoyi.mind.CorrectionAndTreatment.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.mind.CorrectionAndTreatment.domain.DbMindCorrect;
+import com.ruoyi.mind.registered.domain.DbPatientMessageVo2;
+import com.ruoyi.mind.utils.TableListUtils;
+import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.service.ISysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +44,10 @@ public class DbMindTreatController extends BaseController
     @Autowired
     private IDbMindTreatService dbMindTreatService;
 
+
+    @Autowired
+    private ISysUserService sysUserService;
+
     @RequiresPermissions("CorrectionAndTreatment:treat:view")
     @GetMapping()
     public String treat()
@@ -50,7 +63,58 @@ public class DbMindTreatController extends BaseController
     @ResponseBody
     public List<DbMindTreat> list(DbMindTreat dbMindTreat)
     {
-        List<DbMindTreat> list = dbMindTreatService.selectDbMindTreatList(dbMindTreat);
+        /*
+         *     *查询符合条件的需要治疗的病人
+         *     *是否已拥有父级id
+         *     *返回列表
+         *
+         * */
+        List<DbPatientMessageVo2> tms = TableListUtils.getListCurc("treat");
+        List<DbMindTreat> list = new ArrayList<>();
+        tms.forEach(item -> {
+//            判断是否完成
+            if (item.getDbPatientAssociated().getAssociatedId() != null) {
+//                  绑定过
+                DbMindTreat dbMindTreat1 = dbMindTreatService.selectDbMindTreatById(item.getDbPatientAssociated().getAssociatedId());
+//                是否完成
+                if (dbMindTreat1.getHowMany() == 0) {
+//                    已完成
+                    TableListUtils.updateResultOk(item.getDbPatientAssociated().getAssociatedId(), "treat", item.getDbPatientAssociated().getPatientId());
+
+                }else {
+                    DbMindTreat dbCureTms3 = new DbMindTreat();
+                    dbCureTms3.setFatherId(item.getDbPatientAssociated().getAssociatedId());
+
+                    List<DbMindTreat> dbMindTreats = dbMindTreatService.selectDbMindTreatList(dbCureTms3);
+                    list.add(dbMindTreat1);
+                    list.addAll(dbMindTreats);
+                }
+
+            } else {
+                DbMindTreat dbCureTms1 = new DbMindTreat();
+                Long id = item.getDbPatientMessage().getId();
+                dbCureTms1.setPatientId(id);
+                dbCureTms1.setFatherId(0L);
+
+                dbCureTms1.setPatientName(item.getDbPatientMessage().getPatientName());
+//            主治医生
+                SysUser sysUser1 = sysUserService.selectUserById(item.getDbPatientMessage().getTaemId());
+                dbCureTms1.setAttendingPhysician(sysUser1.getUserName());
+/*//            技师名称
+            dbCureTms1.setTechnicianName(ShiroUtils.getSysUser().getUserName());*/
+//          数量
+                dbCureTms1.setHowMany(item.getDbPatientAssociated().getTreatmentNum());
+                List<DbMindTreat> dbMindTreats = dbMindTreatService.selectDbMindTreatList(dbCureTms1);
+                if (dbMindTreats == null || dbMindTreats.size() == 0) {
+                    dbCureTms1.setExecutionTime(new Date());
+                    dbMindTreatService.insertDbMindTreat(dbCureTms1);
+                    list.add(dbCureTms1);
+                }else {
+                    list.addAll(dbMindTreats);
+                }
+            }
+
+        });
         return list;
     }
 
@@ -90,7 +154,26 @@ public class DbMindTreatController extends BaseController
     @ResponseBody
     public AjaxResult addSave(DbMindTreat dbMindTreat)
     {
-        return toAjax(dbMindTreatService.insertDbMindTreat(dbMindTreat));
+        Long fatherId = dbMindTreat.getFatherId();
+        DbMindTreat dbMindTreat1 = dbMindTreatService.selectDbMindTreatById(fatherId);
+        /*
+         * 修改父的剩余次数
+         * */
+        dbMindTreat1.setHowMany(dbMindTreat.getHowMany() - 1);
+        int i = dbMindTreatService.updateDbMindTreat(dbMindTreat1);
+        dbMindTreat1.setId(null);
+        dbMindTreat1.setPatientName(null);
+        dbMindTreat1.setTechnicianName(ShiroUtils.getSysUser().getUserName());
+        dbMindTreat1.setExecutionTime(new Date());
+        dbMindTreat1.setDocumentAddress(dbMindTreat.getDocumentAddress());
+        dbMindTreat1.setFatherId(dbMindTreat.getFatherId());
+        dbMindTreat1.setHowMany(null);
+        int i1 = dbMindTreatService.insertDbMindTreat(dbMindTreat1);
+        /*
+         * 修改id
+         * */
+        int tms = TableListUtils.updateResultId(fatherId, "treat", dbMindTreat1.getPatientId());
+        return toAjax(tms);
     }
 
     /**

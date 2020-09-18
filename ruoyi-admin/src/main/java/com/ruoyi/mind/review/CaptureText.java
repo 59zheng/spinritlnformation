@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 @Controller
 public class CaptureText {
@@ -108,6 +105,23 @@ public class CaptureText {
         }
     }
 
-
+    @GetMapping("/common/isRun")
+    @ResponseBody
+    public AjaxResult isRun( ) throws InterruptedException, IOException {
+        // 上传文件路径
+        String filePath = Global.getUploadPath();
+        // 上传并返回新文件名称
+        String fileName = null;
+        File f = new File("D:"+File.separator+"picture"+File.separator+"send.png");
+        InputStream in = new FileInputStream(f);
+        String name2 =  "send"+ ".png";
+        MultipartFile multipartFile = new MockMultipartFile(name2, name2, "", in);
+        fileName = FileUploadUtils.upload(filePath, multipartFile);
+        String url = "http://127.0.0.1:9989/" + fileName;
+        ajax = AjaxResult.success();
+        ajax.put("fileName",fileName);
+        ajax.put("url", url);
+        return ajax;
+    }
 
 }

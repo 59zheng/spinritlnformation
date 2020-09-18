@@ -5,33 +5,31 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.config.Global;
+import com.ruoyi.common.config.ServerConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.mind.physical.domain.DbReportDiagnosisElectrical;
-import com.ruoyi.mind.physical.domain.DbReportDiagnosisInduced;
 import com.ruoyi.mind.physical.service.IDbReportDiagnosisElectricalService;
-import com.ruoyi.mind.registered.domain.DbPatientMessage;
 import com.ruoyi.mind.registered.domain.DbPatientMessageVo;
 import com.ruoyi.mind.utils.TableListUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -167,12 +165,13 @@ public class DbReportDiagnosisElectricalEndController extends BaseController
         /*
          * 图片路径处理
          * */
-        Resource resource2 = new ClassPathResource("/doc/electrical.docx");
+        File instream = ResourceUtils.getFile("classpath:electrical.docx");
+       /* Resource resource2 = new ClassPathResource("/doc/electrical.docx");
         String absolutePath = resource2.getFile().getAbsolutePath();
+        String modelName =absolutePath;*/
 
-      /*  String property = System.getProperty("induced.docx");
+      /*  String property = System.getProperty("induced.doc");
         String downloadPath = new File(resource.toURI()).getAbsolutePath();*/
-        String modelName =absolutePath;
 
         /*
          *
@@ -181,8 +180,6 @@ public class DbReportDiagnosisElectricalEndController extends BaseController
         ReplaceOptionalTextPictureRefRenderPolicy pictureReplace = TableListUtils.getPictureReplace("electricalPicture", (String) stringObjectMap.get("electricalPicture"));
         ReplaceOptionalTextPictureRefRenderPolicy pictureReplace1 = TableListUtils.getPictureReplace("signatureTechnician", (String) stringObjectMap.get("signatureTechnician"));
         ReplaceOptionalTextPictureRefRenderPolicy pictureReplace2 = TableListUtils.getPictureReplace("signatureDoctor", (String) stringObjectMap.get("signatureDoctor"));
-
-
         ConfigureBuilder configureBuilder = Configure.newBuilder();
         configureBuilder.referencePolicy(pictureReplace);
         configureBuilder.referencePolicy(pictureReplace1);
@@ -191,25 +188,31 @@ public class DbReportDiagnosisElectricalEndController extends BaseController
         Configure configure3 =configureBuilder.build();
 
 
-        XWPFTemplate template = XWPFTemplate.compile( modelName, configure3)
+        XWPFTemplate template = XWPFTemplate.compile( instream, configure3)
                 .render(stringObjectMap1);
 
-        response.setContentType("application/octet-stream");
+        // 清空response
+        response.reset();
+//        response.setContentType("application/octet-stream");
         String patientName = (String) stringObjectMap1.get("patientName");
-        String name="脑电报告"+"("+patientName+")"+".docx";
-        String s = new String(name.getBytes(), "iso-8859-1");
-
-        response.setHeader("Content-disposition", "attachment;filename=\"" + s + "\"");
+        String name = "脑电报告" + "(" + patientName + ")" + ".docx";
 
         try {
             // HttpServletResponse response
-            ServletOutputStream out = response.getOutputStream();
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"" + new String(name.getBytes("gbk"),"iso8859-1")+ ".doc" + "\"");
+
+// HttpServletResponse response
+            OutputStream out = response.getOutputStream();
             BufferedOutputStream bos = new BufferedOutputStream(out);
             template.write(bos);
             template.close();
+            bos.flush();
+            bos.close();
             out.flush();
             out.close();
-            template.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -217,6 +220,28 @@ public class DbReportDiagnosisElectricalEndController extends BaseController
         }
     }
 
+    @Autowired
+    private ServerConfig serverConfig;
 
+    /**
+     * 通用上传请求
+     */
+    @PostMapping("/common/upload")
+    @ResponseBody
+    public AjaxResult uploadFile(MultipartFile file) throws Exception {
+        try {
+            // 上传文件路径
+            String filePath = Global.getUploadPath();
+            // 上传并返回新文件名称
+            String fileName = FileUploadUtils.upload(filePath, file);
+            String url = serverConfig.getUrl() + fileName;
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("fileName", fileName);
+            ajax.put("url", url);
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
 
 }

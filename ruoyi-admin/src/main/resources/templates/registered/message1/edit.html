@@ -91,6 +91,14 @@
                 <input name="patientPhone" th:field="*{patientPhone}" class="form-control" type="text">
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否急性期(1急性期)：</label>
+            <div class="col-sm-8">
+                <select name="patientSex" class="form-control m-b" th:with="type=${@dict.getType('acute_phase')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{isAcutePhase}"></option>
+                </select>
+            </div>
+        </div>
     </form>
 </div>
 <th:block th:include="include :: footer" />

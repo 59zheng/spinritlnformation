@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.json.JSON;
+import com.ruoyi.web.webSocket.MyWebsocketServer;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +53,7 @@ public class SysNoticeController extends BaseController
     public TableDataInfo list(SysNotice notice)
     {
         startPage();
+        
         List<SysNotice> list = noticeService.selectNoticeList(notice);
         return getDataTable(list);
     }
@@ -72,6 +77,13 @@ public class SysNoticeController extends BaseController
     public AjaxResult addSave(SysNotice notice)
     {
         notice.setCreateBy(ShiroUtils.getLoginName());
+        notice.setUpdateTime(new Date());
+        /*
+        * 发布公告
+        * */
+        MyWebsocketServer myWebsocketServer=new MyWebsocketServer();
+        String s = com.alibaba.fastjson.JSON.toJSONString(notice);
+        myWebsocketServer.sendAll(s);
         return toAjax(noticeService.insertNotice(notice));
     }
 
